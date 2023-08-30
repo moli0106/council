@@ -1,0 +1,22 @@
+1000112|1119288257912|SUCCESS|IN|INR|Other|741ZW916D5|10|Payment In Clearing|SBIT|72301|2023-01-31 17:18:32|NB|0|1000112|0.00^0.00||||||||||
+------->>>>>>>>>>>>Created date is------2023-01-31 12:48:37pm--
+
+
+1000112|7340472651412|SUCCESS|IN|INR|Other|92Y1986MQ2|10|Payment In Clearing|SBIT|72315|2023-02-01 10:50:56|NB|0|1000112|0.00^0.00||||||||||
+------->>>>>>>>>>>>Created date is------2023-02-01 06:21:02am--
+1000112|5812179982212|SUCCESS|IN|INR|InsStudentReg|V4525OT0MP|1|Payment In Clearing|SBIT|72418|2023-02-02 12:35:36|NB|0|1000112|0.00^0.00||||||||||
+------->>>>>>>>>>>>Created date is------2023-02-02 08:05:42am--
+1000112|8731458666312|SUCCESS|IN|INR|InsStudentReg|4460UE6MJ1|1|Payment In Clearing|SBIT|72419|2023-02-02 12:37:30|NB|0|1000112|0.00^0.00||||||||||
+------->>>>>>>>>>>>Created date is------2023-02-02 08:07:35am--
+
+------->>>>>>>>>>>>Created date is------2023-02-02 07:44:04pm--
+1000112|5960357277612|SUCCESS|IN|INR|vtcStudentReg|0CKBZCOQ76|1|Payment In Clearing|SBIT|72466|2023-02-03 10:51:21|NB|0|1000112|0.00^0.00||||||||||
+------->>>>>>>>>>>>Created date is------2023-02-03 06:21:26am--
+1000112|3250064727012|SUCCESS|IN|INR|JexpoOnlineExamFee|U4BO9N44K3|1|Payment In Clearing|SBIT|72803|2023-02-15 14:00:15|NB|0|1000112|0.00^0.00||||||||||
+------->>>>>>>>>>>>Created date is------2023-02-15 09:30:20am--
+1000112|9728017809112|SUCCESS|IN|INR|JexpoOnlineExamFee|GIWA17K764|1|Payment In Clearing|SBIT|72824|2023-02-15 15:42:07|NB|0|1000112|0.00^0.00||||||||||
+------->>>>>>>>>>>>Created date is------2023-02-15 11:12:12am--
+
+------->>>>>>>>>>>>Created date is------2023-02-22 11:09:28am--
+1000112|NA|No Records Found|NA|NA|NA|522369HJL5|NA|No Records Found|NA|NA|NA|NA|NA|1000112|0.00^0.00||||||||||
+------->>>>>>>>>>>>Created date is------2023-02-22 11:10:03am--

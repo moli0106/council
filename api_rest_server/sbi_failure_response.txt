@@ -1,0 +1,12 @@
+fail...
+------->>>>>>>>>>>>--------
+{"encData":"gqsZ2\/nDAcKE2+pYO8TnZ6zRoF+7B6y+ort\/o+Vr1Ll6i3Kdi5eRox\/Ftsle1y9BCka0pYPQBCYZ+IuA31b4xMJnJmPZ9Y74xz1R2ovTcz9ebSuvwi\/ySRreVS4wFRL\/fE3Iejec8h2x8Fj5agTKwA==","Bank_Code":"1000112","merchIdVal":"1000112"}
+------->>>>>>>>>>>>Created date is------2023-01-31 08:15:11am--
+{"encData":"syp4QUAWSy85qXDnp89bVCYBOu40s3XW+wo5j396IyiJWfJN9YTRvmxv8P1McxKRC0oeGgLbiihoHE3KJhhrFhgSU+atD4aDPhdHbtDuCtkinjA8UE1TTB4+CiwF7i\/u8OujQGscN1Zd81ktsi5NeQ==","Bank_Code":"1000112","merchIdVal":"1000112"}
+------->>>>>>>>>>>>Created date is------2023-01-31 08:17:22am--
+{"encData":"YCTSKfhid9Kv+jp2+a7SPV0azGaAExwhE6e6XT1nq7BUAVCy6ESXhmesFUpQrMrsEqijAMNybDkYAoXxhpC11gGHnS4T3NimtdoBteKVN2tUDrcji5rXoRBH9zS08bMKTrdCzrUIooz3VAnBeLRXAg==","Bank_Code":"1000112","merchIdVal":"1000112"}
+------->>>>>>>>>>>>Created date is------2023-01-31 09:21:35am--
+{"encData":"90ZqgX92F3T6wPxPFmXV\/9SWkyjyH37IaQCiUw4KD06kfyxngUKrj1bdVv9u4KOLVX1\/g6hTbGSx3BAJ9tmnv57OXKmlyaSBkxmtkMycz8aYe1du0nwIbbOdXldMBnkAB97UmQCBENiaPQ6sCaX3iCVayozkgCyiMQqbu9u4oxA=","Bank_Code":"1000112","merchIdVal":"1000112"}
+------->>>>>>>>>>>>Created date is------2023-02-15 08:43:55am--
+{"encData":"VT6t1HAWC9+Nm810ekmWHwBheqUr103uE\/t1BzPo9UZO9gNNZGmv9knATjk9dDlE7WP8j7vxQDp0G\/TslITnhbTW17XUb5IlsQuY269yYEhLo5Rccjyu73ZsmH1fXSrgwCZ7rmsqYEdDc2OkY6NSKODtV9hEh2oN92pjitYLu84=","Bank_Code":"1000112","merchIdVal":"1000112"}
+------->>>>>>>>>>>>Created date is------2023-02-15 08:50:56am--

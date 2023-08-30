@@ -1,0 +1,276 @@
+<html>
+<style>
+    .ins_name {
+        font-size: 14.5px;
+    }
+
+    #table tr td {
+        border-radius: 10px !important;
+    }
+
+
+    .my-section {
+        margin-top: 6px;
+        border: 2px solid;
+        border-radius: 10px;
+        height: 40px;
+    }
+
+    .my-section-2 {
+        margin-top: 6px;
+        border: 2px solid;
+        border-radius: 10px;
+    }
+
+    * {
+        box-sizing: border-box;
+    }
+
+    .row {
+        margin-left: -5px;
+        margin-right: -5px;
+    }
+
+    .column {
+        float: left;
+        width: 50%;
+        padding: 5px;
+    }
+
+
+    .row::after {
+        content: "";
+        clear: both;
+        display: table;
+    }
+
+    #table2 tr {
+        margin: 15px;
+    }
+
+    th {
+        text-align: left;
+    }
+
+    #background {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: fixed;
+        left: 140px;
+        top: 150px;
+    }
+</style>
+
+<body>
+
+    <div id="background">
+        <img id="bg-text" src="<?php echo $watherMark; ?>" alt="" style="opacity: 0.5;height: 75%; width: 85%;">
+    </div>
+    <table id="table" cellspacing="0">
+        <tr>
+            <td style="padding: 13px;border: 2px solid; border-right: transparent; ">
+                <img src="data:image/png;base64,<?php echo base64_encode( file_get_contents( 'admin/themes/adminlte/assets/image/certificate/logo.png')); ?>"
+                    alt="" width="10%" height="10%" class="logo">
+            </td>
+            <td
+                style="padding: 8px;width: 500px;border: 2px solid;border-left: transparent; border-radius: 5px !important;">
+                <div class="ins_name">
+                    <b>WEST BENGAL STATE COUNCIL OF TECHNICAL & VOCATIONAL <br> EDUCATION & SKILL
+                        DEVELOPMENT</b><br>
+                    [A Statutory Body under West Bengal Act XXVI of 2013]<br>
+                    <b>(Formally West Bengal State Council of Technical Education)</b><br>
+                    <p style="font-size: 9px;">"Karigori Bhavan", 4th Floor, Plot No. B/7, Action Area-III, New
+                        Town, Rajarhat, Kolkata-700160</p>
+                </div>
+            </td>
+            <td> </td>
+            <td style="width: 230px;border: 2px solid;">
+                <img src="data:image/png;base64,<?php echo $barcode ;?>" alt="" width="34%" height="12%" class="logo">
+            </td>
+
+        </tr>
+    </table>
+    <div class="my-section">
+        <div class="admin-title" style="margin-left:230px;">
+            <div style="margin-top: 4px; font-weight:800;">
+                <strong> <span style="font-size: 20px;">P</span>ROVISIONAL <span style="font-size: 20px;">A</span>DMIT
+                    <span style="font-size: 20px;">C</span>ARD </strong>
+            </div>
+
+        </div>
+        <div style="margin-left:18px;margin-top: -10px; margin-bottom: -5px;">
+            <p style="font-size:12.5px;"> <b>For admission to Polytechnics of West Bengal for the Academic Session
+                    2023-24 through <?php if($admitDetails[0]['exam_type_id_fk'] == 1) {echo 'JEXPO';}else{echo 'VOCLET';}?>-2023</b></p>
+        </div>
+    </div>
+
+    <div class="my-section-2">
+        <div class="row">
+            <div class="column" style="margin-left: 10px; width: 60%;">
+                <table id="table2">
+                    <tr>
+                        <th style="font-size: 13.5px;">Index Number</th>
+                        <th style="font-size: 13.5px;">:
+                            <?php echo $admitDetails[0]['index_number']; ?>
+                        </th>
+                    </tr>
+                    <tr>
+                        <th style="font-size: 13.5px;">Application Form Number</th>
+                        <th style="font-size: 13.5px;">:
+                            <?php echo $admitDetails[0]['application_form_no']; ?>
+                        </th>
+                    </tr>
+                    <tr>
+                        <th style="font-size: 13.5px;">Candidates Name</th>
+                        <th style="font-size: 13.5px;">:
+                            <?php echo $admitDetails[0]['candidate_name']; ?>
+                        </th>
+                    </tr>
+                    <tr>
+                        <th style="font-size: 13.5px;">Date of Birth</th>
+                        <th style="font-size: 13.5px;">:
+                            <?php echo date('d-m-Y', strtotime($admitDetails[0]['date_of_birth'])); ?>
+                        </th>
+                    </tr>
+                    <tr>
+                        <th style="font-size: 13.5px;">Category</th>
+                        <th style="font-size: 13.5px;">:
+                            <?php echo $admitDetails[0]['caste_name']; ?>
+                        </th>
+                    </tr>
+                    <tr>
+                        <th style="font-size: 13.5px;">Physically Challenged</th>
+                        <th style="font-size: 13.5px;">:
+                            <?php echo $admitDetails[0]['handicapped']; ?>
+                        </th>
+                    </tr>
+                    <tr>
+                        <th style="font-size: 13.5px;">Land Looser</th>
+                        <th style="font-size: 13.5px;">:
+                            <?php echo $admitDetails[0]['land_loser']; ?>
+                        </th>
+                    </tr>
+                    <tr>
+                        <th style="font-size: 13.5px;">Seeking Admission under TFW?</th>
+                        <th style="font-size: 13.5px;">:
+                            <?php echo $admitDetails[0]['applied_under_tfw']; ?>
+                        </th>
+                    </tr>
+                </table>
+            </div>
+
+
+            <div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <img width="40%" height="40%"
+                    src="data:image/jpeg;base64,<?php echo pg_unescape_bytea($admitDetails[0]['picture1']); ?>"
+                    style="border: 2px solid; margin-top: 5px;">
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <img width="55%" height="15%"
+                    src="data:image/jpeg;base64,<?php echo pg_unescape_bytea($admitDetails[0]['sign1']); ?>"
+                    style="border: 2px solid;">
+            </div>
+
+
+            <div class="column" style="margin-left: 17px; width: 60%; border: 2px solid;margin-bottom: 5px;">
+                <table>
+                    <tr>
+                        <th style="font-size: 13.5px;text-decoration: underline;">Name and address of the Examination
+                            centre:</th>
+                    </tr>
+                    <tr>
+                        <td style="font-style: italic; font-size: 12px;"><b><?php echo $admitDetails[0]['centre_name']; ?></b></td>
+                    </tr>
+                    <tr>
+                        <td style="font-style: italic; font-size: 12px;"><b><?php echo $admitDetails[0]['centre_address']; ?></b></td>
+                    </tr>
+                    <tr>
+                        <td style="font-style: italic; font-size: 12px;"><b>P.S. <?php echo $admitDetails[0]['police_station']; ?></b></td>
+                    </tr>
+                    <tr>
+                        <td style="font-style: italic; font-size: 12px;"><b><?php echo $admitDetails[0]['district_name']; ?>, PIN:<?php echo $admitDetails[0]['pincode']; ?></b></td>
+                    </tr>
+                </table>
+            </div>
+
+            <div>&nbsp;&nbsp;</div>
+            <div>&nbsp;&nbsp;</div>
+
+            <div>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <img width="150px" height="30px"
+                    src="data:image/png;base64,<?php echo base64_encode( file_get_contents( 'admin/themes/adminlte/assets/image/certificate/sandip_kundu_sign.png')); ?>">
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <b style="font-size: 11px;">Senior Administrative Officer <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    <span style="font-size: 9px;">(Technical Education)</span></b>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="my-section">
+        <div class="admin-title" style="margin-left:160px;">
+            <div style="margin-top: 4px; font-weight:800;">
+                <strong> Date of Examination : 6<sup>th</sup> May, 2023 (Saturday)</strong>
+            </div>
+        </div>
+        <div style="margin-left:240px;margin-top: -10px; margin-bottom: -5px;">
+            <p style="font-size:13px;"> <b><?php if($admitDetails[0]['exam_type_id_fk'] == 1) {echo '[Timings: 10 a.m. to 12 noon]';}else{echo '[Timings: 1:30 p.m. to 3:30 p.m]';}?></b></p>
+        </div>
+    </div>
+
+    <div class="my-section">
+        <div class="admin-title" style="margin-left:200px;">
+            <div style="margin-top: 4px; font-weight:800;">
+                <strong> INSTRUCTIONS TO THE CANDIDATE</strong><br>
+                <span style="font-size: 11.6px;"><b>(Following instructions must be read carefully)</b></span>
+            </div>
+        </div>
+        <div style="margin-top: -5px; margin-bottom: 20px; font-size: 10px;">
+            <ol>
+                <li>Candidates should bring with them the downloaded Admit Card along with any original Photo
+                    Admit Card of Madhyamik/ Equivalent Examination or any other Photo Identity card e.g Voter
+                    ID Card, Aadhaar Card, etc. for proof of their identity, without which candidate may not be
+                    allowed to enter into the Examination Hall.</li>
+                <li>Candidates must bring with them Black/Blue Point Pen Only.</li>
+                <li>Candidates must enter the Examination Hall 30 minutes before the start of the examination to
+                    receive general instructions for answering MCQ type questions.</li>
+                <li>Candidates will not be allowed to enter in the Examination Hall with Graph Papers, Log
+                    Tables, Calculators, Mobile Phone, Tab, Digital Diary, Pager, Digital Watch or any other
+                    electronics devices.</li>
+                <li>This Provisional Admit Card must be shown to the officer supervising the examination as and
+                    when asked for.</li>
+                <li>Violation of any instruction and adoption of any unfair means in the Examination Hall shall
+                    render the candidate liable for cancellation of his/her answer sheet and forfeiture of
+                    his/her claim for admission.</li>
+                <li>All applicants who appear to be prima facie eligible are provisionally permitted to sit for
+                    this Joint Entrance Examination (<?php if($admitDetails[0]['exam_type_id_fk'] == 1) {echo 'JEXPO';}else{echo 'VOCLET';}?>-2023). If after scrutiny at any stage, it is found
+                    that the applicant is otherwise ineligible, his/her candidature will be cancelled
+                    automatically even if he/she has appeared at the examination and secured a position in the
+                    merit list.</li>
+                <li>In case any discrepancy is observed in the data printed on this Provisional Admit Card
+                    pertaining to the candidate’s personal details, the same should be brought to the notice of
+                    the Council before the date of the examination.</li>
+                <li>Claim of seats reserved for SC/ST/OBC candidates is strictly for applicants having caste
+                    certificate originated in the State of West Bengal only. SC/ST/OBC candidates belonging to
+                    other state outside West Bengal shall be treated as General Category candidates.</li>
+                <li>Original copy of SC/ST/OBC/PC/LLQ or TFW certificate, as applicable, will be required at the
+                    time of counselling and admission.</li>
+                <li>Candidates must fill OMR Answer Sheet very carefully in consultation with this Provisional
+                    Admit Card and the Question Booklet.</li>
+                <li>Rough work or any other type of writing should not be done on the OMR Answer Sheet. Question
+                    Booklet may be used for the purpose.</li>
+                <li>Candidates may download the Sample OMR Answer Sheet from the website www.webscte.co.in.</li>
+                <li>This Provisional Admit Card should be preserved by the candidates till completion of the
+                    entire admission process.</li>
+                <li>No student will be allowed to enter in the examination centre/hall without face cover/mask.
+                    They should carry hand sanitizer during the examination for their own safety.</li>
+            </ol>
+        </div>
+
+    </div>
+</body>
+
+</html>

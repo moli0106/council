@@ -1,0 +1,127 @@
+<?php $this->load->view($this->config->item('theme_uri').'layout/header_view'); ?>
+<?php $this->load->view($this->config->item('theme_uri').'layout/left_menu_view'); ?>
+
+<div class="content-wrapper">
+    <section class="content-header">
+        <h1>Question Type/Mark List</h1>
+        <ol class="breadcrumb">
+            <li><a href="dashboard"><i class="fa fa-dashboard"></i> Dashboard</a></li>
+            <li class="active"><i class="fa fa-align-center"></i>Question Type/Mark List</li>
+        </ol>
+    </section>
+
+    <section class="content">
+        <?php if($this->session->flashdata('status') !== null){ ?>
+            <div class="alert alert-<?=$this->session->flashdata('status')?>">
+                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                <?=$this->session->flashdata('alert_msg')?>
+            </div>
+        <?php } ?>
+
+        <div class="box box-info">
+            <div class="box-header with-border">
+                <h3 class="box-title">Question Type/Mark List</h3>
+                <div class="box-tools pull-right">
+                    <a href="<?php echo base_url('admin/qbm_master/question_type_mark/add') ?>" class="btn btn-info btn-sm">
+                        <i class="fa fa-user-plus" aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;Add Question Type/Mark
+                    </a>
+                </div>
+            </div>
+            <div class="box-body">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>Sl. No.</th>
+                            <th>Couse</th>
+                            <th>Question Type</th>
+                            <th>Question Mark</th>
+							<th>Total No of Question</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php
+                            if(count($disciplineList))
+                            {
+                                $i = $offset;
+                                foreach ($disciplineList as $key => $discipline) { ?>
+
+                                    <tr id="<?php echo md5($discipline['course_id_pk']); ?>">
+                                        <td><?php echo ++$i; ?>.</td>
+                                        <td><?php echo $discipline['course_name']; ?></td>
+                                        <td><?php echo $discipline['question_type_name']; ?></td>
+                                        <td><?php echo $discipline['question_mark']; ?></td>
+										<td><?php echo $discipline['no_of_question']; ?></td>
+                                        
+                                        <!-- <td>
+                                            
+                                            <?php
+                                                if($discipline['active_status'] == 1) {
+                                                    echo'<button class="btn btn-sm btn-danger changeStatus" data-name="Suspend">
+                                                        <i class="fa fa-power-off" aria-hidden="true"></i>
+                                                    </button>';
+                                                }    
+                                                elseif($discipline['active_status'] == 2) {
+                                                    echo'<button class="btn btn-sm btn-success changeStatus" data-name="Activate">
+                                                        <i class="fa fa-power-off" aria-hidden="true"></i>
+                                                    </button>';
+                                                }    
+                                            ?>
+                                            <a href="<?php echo base_url('admin/master/question_creator_moderator/update_sector/' . md5($trainer['creator_moderator_id_pk'])); ?>" class="btn btn-info btn-sm">
+                                            <i class="fa fa-folder-open" aria-hidden="true"></i>
+                                        </td> -->
+                                    </tr>
+
+                                <?php }
+                            } else { ?>
+
+                                <tr>
+                                    <td colspan="4" align="center" class="text-danger">No Data Found...</td>
+                                </tr>
+
+                            <?php }
+                        ?>
+                    </tbody>
+                </table>
+            </div>
+            <div class="box-footer" style="text-align: center">
+                <?php echo $page_links ?>
+            </div>
+        </div>
+    </section>
+</div>
+
+<!-- Modal -->
+<div id="myModalList" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close text-danger" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title text-info">Sector List</h4>
+            </div>
+            <div class="modal-body">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>Sl. No.</th>
+                            <th>Sector</th>
+                            
+                        </tr>
+                    </thead>
+                    <tbody id="sectorJobRoleList">
+                        <tr>
+                            <td colspan="3" align="center">Please wait a moment...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <!-- <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div> -->
+        </div>
+
+    </div>
+</div>
+
+<?php $this->load->view($this->config->item('theme_uri').'layout/footer_view'); ?>

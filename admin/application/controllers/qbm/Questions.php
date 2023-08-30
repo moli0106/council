@@ -1,0 +1,1331 @@
+<?php
+defined('BASEPATH') or exit('No direct script access allowed');
+
+class Questions extends NIC_Controller
+{
+    public function __construct()
+    {
+        parent::__construct();
+        parent::check_privilege(95);
+        //$this->output->enable_profiler(TRUE);
+        $this->load->model('qbm/questions_model');
+
+        $this->css_head = array(
+            1 => $this->config->item('theme_uri') . 'bower_components/select2/dist/css/select2.min.css',
+        );
+        $this->js_foot = array(
+            1 => $this->config->item('theme_uri') . "qbm/question.js",
+            2 => $this->config->item('theme_uri') . 'bower_components/select2/dist/js/select2.full.min.js',
+            3 => $this->config->item('theme_uri') . 'assets/js/sweetalert.js',
+        );
+    }
+
+    public function index($offset = 0)
+    {
+        $data['subject_id_hash'] = $this->input->get('sub');
+        if (!empty($data['subject_id_hash'])) {
+
+            $stake_details_id_fk = $this->session->userdata('stake_details_id_fk');
+            $data['semesterList'] = $this->questions_model->getSemesterListBySubjectId($data['subject_id_hash']);
+
+            $data['questionListCount'] = $this->questions_model->getSubjectQuestionListCount($stake_details_id_fk, $data['subject_id_hash'])[0]['count'];
+            $data['questionList'] = $this->questions_model->getSubjectQuestionList($stake_details_id_fk, $data['subject_id_hash']);
+            $data['questionCategoryList'] = $this->questions_model->getSubjectQuestionCategoryList($data['subject_id_hash']);
+			$data['subject_cat_id'] = $this->questions_model->getSubjectCategory($data['subject_id_hash'])[0];	//Added by Waseem on 09-02-2022
+
+            $this->load->view($this->config->item('theme') . 'qbm/question_list_view', $data);
+        } else {
+            redirect(base_url('admin/qbm/questions/subjects'));
+        }
+    }
+
+    public function getQuestionListBySemSubj()
+    {
+        if (!$this->input->is_ajax_request()) {
+            exit('No direct script access allowed');
+        } else {
+
+            $semester_id = $this->input->get('semester_id');
+            $subject_id_hash = $this->input->get('subject_id');
+
+            $forwardQuestionBtnStatus = $this->input->get('forwardQuestionBtnStatus');
+
+            if (!empty($subject_id_hash) && !empty($semester_id)) {
+
+                if (isset($forwardQuestionBtnStatus) && ($forwardQuestionBtnStatus == 1)) {
+                    $this->forwardQuestionSet($semester_id, $subject_id_hash);
+                }
+
+                $count = 0;
+                $forwardQuestionStatus = 1;
+				$forwardQuestionStatus_other_lan = 1;
+                $htmlView_questionList = $htmlView_questionCategoryList = $forwardQuestionBtn = '';
+
+                $stake_details_id_fk = $this->session->userdata('stake_details_id_fk');
+
+                $questionList = $this->questions_model->getSubjectQuestionListBySem($stake_details_id_fk, $subject_id_hash, $semester_id);
+                //$questionCategoryList = $this->questions_model->getSubjectQuestionCategoryList($subject_id_hash);
+				$questionCategoryList = $this->questions_model->getSubjectQuestionCategoryList_by_sem($subject_id_hash,$semester_id);   // Added by Waseem on 07-02-2022
+
+                $allCategoryList = array_fill_keys(array_keys(array_flip(array_column($questionCategoryList, 'question_type_mark_id_pk'))), 0);
+				
+				$subject_cat_id = $this->questions_model->getSubjectCategory($subject_id_hash)[0];	//Added by Waseem on 09-02-2022
+				//echo $subject_cat_id['sub_cat_id_fk'];
+
+                if (!empty($questionList)) {
+                    foreach ($questionList as $key => $question) {
+
+                        if ($semester_id != 'All') {
+                            $allCategoryList[$question['question_type_mark_id_pk']] += 1;
+                        }
+						
+						if($subject_cat_id['sub_cat_id_fk'] != 1 && $question['other_lan_quesstion_status'] !=1){
+                            $forwardQuestionStatus_other_lan = 0;
+                        }
+
+                        $htmlView_questionList .= '
+                            <tr id="' . md5($question['question_id_pk']) . '">
+                                <td>' . ++$count . '.</td>
+                                <td>' . $question['semester_name'] . '</td>
+                                <td>' . $question['subject_name'] . ' [' . $question['subject_code'] . ']</td>
+                                <td>' . $question['topics_chapter_name'] . '</td>
+                                <td>' . $question['question_type_name'] . ' [' . $question['question_mark'] . ']</td>
+                                <td>
+                                    <button class="btn bg-navy btn-xs btn-flat view-question-details" data-toggle="modal" data-target="#modal-question-details">Details</button>';
+
+                                    if($subject_cat_id['sub_cat_id_fk'] != 1){
+
+                                        $htmlView_questionList .= '<button class="btn btn-info btn-xs btn-flat add-multi-lang-question" data-toggle="modal" data-target="#modal-question-details">Multi Lang.</button>';
+                                    }
+                                    
+                                    $htmlView_questionList .= '<button class="btn btn-danger btn-xs btn-flat remove-question">Remove</button>
+                                </td>
+                            </tr>
+                        ';
+                    }
+                } else {
+                    $htmlView_questionList = '<tr><td colspan="11" align="center" class="text-danger">No Data Found...</td></tr>';
+                }
+
+                foreach ($questionCategoryList as $key => $value) {
+
+                    if ($semester_id != 'All') {
+                        $enteredQuestion = $allCategoryList[$value['question_type_mark_id_pk']];
+
+                        if ($value['min_no_of_question'] > $enteredQuestion) {
+                            $forwardQuestionStatus = 0;
+							
+                        }
+                    } else {
+                        $enteredQuestion = '';
+                        $forwardQuestionStatus = 0;
+                    }
+
+                    $htmlView_questionCategoryList .= '
+                        <div class="col-md-6">
+                            <ul class="nav nav-pills nav-stacked">
+                                <li>
+                                    <a href="javascript:void(0)">
+                                        <i class="fa fa-circle-o text-red"></i>
+                                        ' . $value['question_type_name'] . ' <b>['.$value['semester_name']. ']</b>
+                                        <span class="pull-right">' . $enteredQuestion .'/'. $value['min_no_of_question'] . '</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    ';
+                }
+				
+				if($subject_cat_id['course_id_fk']==1 || $subject_cat_id['course_id_fk']==2){
+					if ($forwardQuestionStatus == 1 && $forwardQuestionStatus_other_lan == 1) {
+						$forwardQuestionBtn = '
+							<button class="btn btn-sm btn-block btn-flat bg-maroon" id="forwardQuestionBtn">
+								<i class="fa fa-file-text" aria-hidden="true"></i> &nbsp; Save Question Set
+							</button>
+						';
+					}
+				}else{
+					if ($forwardQuestionStatus == 1) {
+						$forwardQuestionBtn = '
+							<button class="btn btn-sm btn-block btn-flat bg-maroon" id="forwardQuestionBtn">
+								<i class="fa fa-file-text" aria-hidden="true"></i> &nbsp; Save Question Set
+							</button>
+						';
+					}
+				}
+
+                echo json_encode(array(
+                    'questionList' => $htmlView_questionList,
+                    'forwardQuestionBtn' => $forwardQuestionBtn,
+                    'questionCategoryList' => $htmlView_questionCategoryList,
+                ));
+            }
+        }
+    }
+
+    public function forwardQuestionSet($semester_id = NULL, $subject_id_hash = NULL)
+    {
+        $stake_details_id_fk = $this->session->userdata('stake_details_id_fk');
+
+        $this->questions_model->forwardQuestionSet($stake_details_id_fk, $subject_id_hash, $semester_id);
+
+        return TRUE;
+    }
+
+    public function question_details($id_hash = NULL)
+    {
+        if (!$this->input->is_ajax_request()) {
+            exit('No direct script access allowed');
+        } else {
+            if (!empty($id_hash)) {
+
+                $data['question_details'] = $this->questions_model->getEngQuestionList($id_hash);
+                if (!empty($data['question_details'])) {
+
+                    $data['question_category'] = $this->questions_model->getQuestionCategory();
+
+                    $html_view = $this->load->view($this->config->item('theme') . 'qbm/ajax/question_details_view', $data, TRUE);
+
+                    echo json_encode($html_view);
+                }
+            }
+        }
+    }
+
+    public function addMultiLangQuestion_OLD($id_hash = NULL)
+    {
+        if (!$this->input->is_ajax_request()) {
+            if ($this->input->server('REQUEST_METHOD') == 'POST') {
+
+                $question_details = $this->questions_model->getEngQuestionList($id_hash);
+
+                $data['question'] = $this->input->post('question');
+                $data['question_clue'] = $this->input->post('question_clue');
+                $data['per_question_marks'] = $this->input->post('per_question_marks');
+
+                $question_pic = NULL;
+                $other_question_array = array();
+
+                foreach ($data['question'] as $key => $question) {
+
+                    if (!empty($_FILES['question_pic']['tmp_name'][$key])) {
+                        $question_pic = base64_encode(file_get_contents($_FILES["question_pic"]['tmp_name'][$key]));
+                    }
+
+                    if (!empty($question) && !empty($data['question_clue'][$key])) {
+                        $tmp_array = array(
+                            'question_id_fk' => $question_details[0]['question_id_pk'],
+                            'question' => $question,
+                            'question_clue' => $data['question_clue'][$key],
+                            'question_pic' => $question_pic,
+                            'per_question_marks' => $data['per_question_marks'][$key],
+                        );
+                    } else {
+                        $this->session->set_flashdata('status', 'danger');
+                        $this->session->set_flashdata('alert_msg', 'Oops! Unable to add question, Please try after sometime.');
+
+                        redirect(base_url('admin/qbm/questions?sub=' . md5($question_details[0]['subject_id'])));
+                        exit();
+                    }
+
+                    array_push($other_question_array, $tmp_array);
+                }
+
+                $this->questions_model->insert_batch_other_question($other_question_array);
+
+                $this->questions_model->updateQuestionBank($question_details[0]['question_id_pk'], array("other_lan_quesstion_status" => 1));
+
+                $this->session->set_flashdata('status', 'success');
+                $this->session->set_flashdata('alert_msg', 'Question has been added successfully.');
+
+                redirect(base_url('admin/qbm/questions?sub=' . md5($question_details[0]['subject_id'])));
+            } else {
+                exit('No direct script access allowed');
+            }
+        } else {
+            if (!empty($id_hash)) {
+
+                $data['question_details'] = $this->questions_model->getEngQuestionList($id_hash);
+                $data['other_question_details'] = $this->questions_model->getOtherQuestionList($id_hash);
+
+                if (!empty($data['question_details'])) {
+
+                    $html_view = $this->load->view($this->config->item('theme') . 'qbm/ajax/question_add_multi_lang_view', $data, TRUE);
+
+                    echo json_encode($html_view);
+                }
+            }
+        }
+    }
+
+    public function addMultiLangQuestion($id_hash = NULL)
+    {
+        if (!$this->input->is_ajax_request()) {
+            if ($this->input->server('REQUEST_METHOD') == 'POST') {
+
+                $question_details = $this->questions_model->getEngQuestionList($id_hash);
+                $other_question_details = $this->questions_model->getOtherQuestionList($id_hash);
+
+                $data['eng_question'] = $this->input->post('eng_question');
+                $data['other_question'] = $this->input->post('other_question');
+                $data['question'] = $this->input->post('question');
+                $data['question_clue'] = $this->input->post('question_clue');
+                $data['per_question_marks'] = $this->input->post('per_question_marks');
+                $data['q_type'] = $this->input->post('q_type');
+
+                // ! Starting Transaction
+                $this->db->trans_start(); # Starting Transaction
+
+                foreach ($data['question'] as $key => $question) {
+
+                    $question_pic = NULL;
+                    $file_validation_err = 0;
+                    $max_size = 502400; // 100KB Size
+
+                    if ($_FILES['question_pic']['name'][$key] != '') {
+
+                        $file_name = $_FILES['question_pic']['name'][$key];
+                        $extension = pathinfo($file_name, PATHINFO_EXTENSION);
+
+                        if ($_FILES['question_pic']['size'][$key] > $max_size || (strtoupper($extension) != "JPG" && strtoupper($extension) != "JPEG")) {
+                            $file_validation_err = 1;
+                            $data['file_error'] = "Max 100 kb and image format should be JPG/JPEG";
+                        } else {
+                            $question_pic = base64_encode(file_get_contents($_FILES["question_pic"]['tmp_name'][$key]));
+                        }
+                    }
+					
+					 // Added By Moli 22-02-2022
+
+					if ($_FILES['answer_pic']['name'][$key] != '') {
+
+						$file_name = $_FILES['answer_pic']['name'][$key];
+						$extension = pathinfo($file_name, PATHINFO_EXTENSION);
+
+						if ($_FILES['answer_pic']['size'][$key] > $max_size || (strtoupper($extension) != "JPG" && strtoupper($extension) != "JPEG")) {
+							$file_validation_err = 1;
+							$data['file_error'] = "Max 100 kb and JPG/JPEG";
+						} else {
+							$answer_pic = base64_encode(file_get_contents($_FILES["answer_pic"]['tmp_name'][$key]));
+						}
+					}
+
+					// Added By Moli 22-02-2022
+
+                    if (!empty($question) && !empty($data['question_clue'][$key])) {
+
+                        $other_question_array = array(
+                            'question_id_fk' => $question_details[0]['question_id_pk'],
+                            'question' => $question,
+                            'question_clue' => $data['question_clue'][$key],
+                            'question_pic' => $question_pic,
+							'answer_pic' => $answer_pic,
+                            'per_question_marks' => $data['per_question_marks'][$key],
+                            'eng_question_id_fk' => $data['eng_question'][$key],
+                            'q_type'             => $data['q_type'][$key],
+                        );
+
+                        if (!empty($other_question_details)) {
+
+                            $other_question_array['updated_time'] = "now()";
+                            $other_question_array['updated_ip'] = $this->input->ip_address();
+                            $other_question_array['updated_by'] = $this->session->userdata('stake_details_id_fk');
+
+                            $this->questions_model->update_other_question($data['other_question'][$key], $other_question_array);
+                        } else {
+
+                            $other_question_array['entry_time'] = "now()";
+                            $other_question_array['entry_ip'] = $this->input->ip_address();
+                            $other_question_array['entry_by'] = $this->session->userdata('stake_details_id_fk');
+
+                            $this->questions_model->insert_other_question($other_question_array);
+                        }
+                    } else {
+                        $this->session->set_flashdata('status', 'danger');
+                        $this->session->set_flashdata('alert_msg', 'Oops! Unable to add question, Please try after sometime.');
+
+                        $this->db->trans_rollback();
+
+                        redirect(base_url('admin/qbm/questions?sub=' . md5($question_details[0]['subject_id'])));
+                        exit();
+                    }
+                }
+
+                $this->questions_model->updateQuestionBank($question_details[0]['question_id_pk'], array("other_lan_quesstion_status" => 1));
+
+                // ! Check All Query For Trainee
+                if ($this->db->trans_status() === FALSE) {
+                    # Something went wrong.
+                    $this->db->trans_rollback();
+
+                    $this->session->set_flashdata('status', 'danger');
+                    $this->session->set_flashdata('alert_msg', 'Oops! Unable to add question, Please try after sometime.');
+                } else {
+                    # Everything is Perfect. Committing data to the database.
+                    $this->db->trans_commit();
+
+                    $this->session->set_flashdata('status', 'success');
+                    $this->session->set_flashdata('alert_msg', 'Question has been added successfully.');
+                }
+
+                redirect(base_url('admin/qbm/questions?sub=' . md5($question_details[0]['subject_id'])));
+            } else {
+                exit('No direct script access allowed');
+            }
+        } else {
+            if (!empty($id_hash)) {
+
+                $data['question_details'] = $this->questions_model->getEngQuestionList($id_hash);
+                $data['other_question_details'] = $this->questions_model->getOtherQuestionList($id_hash);
+
+                if (!empty($data['question_details'])) {
+
+                    $data['question_category'] = $this->questions_model->getQuestionCategory();
+
+                    $html_view = $this->load->view($this->config->item('theme') . 'qbm/ajax/question_add_multi_lang_view', $data, TRUE);
+
+                    echo json_encode($html_view);
+                }
+            }
+        }
+    }
+
+    public function eng_question_image($id_hash = NULL)
+    {
+        if (!empty($id_hash)) {
+
+            $eng_question_details = $this->questions_model->getEngQuestionDetails($id_hash);
+            if (!empty($eng_question_details)) {
+
+                $question_pic = $eng_question_details[0]['question_pic'];
+
+                $img_name = 'IMG-' . date('Ymd') . '-' . date('his') . '.JPG';
+
+                header("Content-type:image/jpeg");
+
+                header("Content-Disposition:attachment;filename=" . $img_name);
+
+                echo base64_decode($question_pic);
+            }
+        } else {
+            redirect('admin/qbm_question/manage_question');
+        }
+    }
+
+    public function other_question_image($id_hash = NULL)
+    {
+        if (!empty($id_hash)) {
+
+            $eng_question_details = $this->questions_model->getOtherQuestionDetails($id_hash);
+            if (!empty($eng_question_details)) {
+
+                $question_pic = $eng_question_details[0]['question_pic'];
+
+                $img_name = 'IMG-' . date('Ymd') . '-' . date('his') . '.JPG';
+
+                header("Content-type:image/jpeg");
+
+                header("Content-Disposition:attachment;filename=" . $img_name);
+
+                echo base64_decode($question_pic);
+            }
+        } else {
+            redirect('admin/qbm_question/manage_question');
+        }
+    }
+
+    public function remove_question($id_hash = NULL)
+    {
+        if (!$this->input->is_ajax_request()) {
+            exit('No direct script access allowed');
+        } else {
+            if (!empty($id_hash)) {
+
+                $question_details = $this->questions_model->getEngQuestionList($id_hash);
+                if (!empty($question_details)) {
+
+                    $update_status = $this->questions_model->removeQuestionBank($id_hash, array('active_status' => 0));
+                    if ($update_status) {
+
+                        // $this->manage_question_model->removeEngQuestionList($id_hash, array('active_status' => 0));
+
+                        echo json_encode($question_details);
+                    }
+                }
+            }
+        }
+    }
+
+    public function courses()
+    {
+        $stake_details_id_fk = $this->session->userdata('stake_details_id_fk');
+        $data['courseList'] = $this->questions_model->getCourseListWithSemester($stake_details_id_fk);
+
+        $this->load->view($this->config->item('theme') . 'qbm/course_list_view', $data);
+    }
+
+    public function subjects()
+    {
+        $stake_details_id_fk = $this->session->userdata('stake_details_id_fk');
+
+        $data['subjectList'] = $this->questions_model->getCreatorSubjectList($stake_details_id_fk);
+
+        // parent::pre($data);
+        $this->load->view($this->config->item('theme') . 'qbm/subject_list_view', $data);
+    }
+
+    public function add()
+    {
+        $stake_details_id_fk = $this->session->userdata('stake_details_id_fk');
+        $data['courseList'] = $this->questions_model->getCourseList($stake_details_id_fk);
+
+        $formData['course_id'] = $this->input->get('crk');
+        $formData['sam_year_id'] = $this->input->get('syrk');
+        $formData['subject_id'] = $this->input->get('srk');
+        $formData['subject_topics_id'] = $this->input->get('strk');
+        $formData['question_type_marks'] = $this->input->get('qtmrk');
+
+        //Added on 23-02-2022
+		
+        if (!empty($formData['course_id'])) {
+			if($formData['course_id']==3 || $formData['course_id']==4){
+				$data['subjectList'] = $this->questions_model->getSubjectListByCourseIdSemId($stake_details_id_fk, $formData['course_id'],$formData['sam_year_id']);
+				$data['semesterList'] = $this->questions_model->getSemesterList($stake_details_id_fk, $formData['course_id']);
+			}else{
+				$data['semesterList'] = $this->questions_model->getSemesterList($stake_details_id_fk, $formData['course_id']);
+				$data['subjectList'] = $this->questions_model->getSubjectListByCourseId($stake_details_id_fk, $formData['course_id']);
+			}
+        }
+		
+		//Added on 23-02-2022
+		
+        if (!empty($formData['sam_year_id']) && !empty($formData['subject_id'])) {
+            if (($formData['course_id'] == 1) || ($formData['course_id'] == 2)) {
+                $formData_sam_year_id = $formData['sam_year_id'];
+            } else {
+                $formData_sam_year_id = NULL;
+            }
+            $data['topicList'] = $this->questions_model->getTopicChapterList($formData['subject_id'], $formData_sam_year_id);
+            $data['questionTypeMarkList'] = $this->questions_model->getSubjectQuestionTypeMark($formData['subject_id'],$formData['sam_year_id']);
+        }
+
+        $data['formData'] = $formData;
+        // parent::pre($data);
+
+        $this->load->view($this->config->item('theme') . 'qbm/question_add_view', $data);
+    }
+
+    public function create_OLD()
+    {
+        $stake_details_id_fk = $this->session->userdata('stake_details_id_fk');
+        $data['courseList'] = $this->questions_model->getCourseList($stake_details_id_fk);
+
+        if ($this->input->server("REQUEST_METHOD") == "POST") {
+
+            $this->load->library('form_validation');
+            $this->form_validation->set_error_delimiters('<div class="text-red">', '</div>');
+
+            // ! Create GET data for store value in url
+            $crk = $this->input->post('course_id');
+            $syrk = $this->input->post('sam_year_id');
+            $srk = $this->input->post('subject_id');
+            $strk = $this->input->post('subject_topics_id');
+            $qtmrk = $this->input->post('question_type_marks');
+
+            $url_data = "crk=$crk&syrk=$syrk&srk=$srk&strk=$strk&qtmrk=$qtmrk";
+
+            $data['q_type'] = $this->input->post('q_type');
+            $data['question'] = $this->input->post('question');
+            $data['question_clue'] = $this->input->post('question_clue');
+            $data['per_question_marks'] = $this->input->post('per_question_marks');
+
+            $config = array(
+                array(
+                    'field' => 'course_id',
+                    'label' => 'Course',
+                    'rules' => 'trim|required|numeric'
+                ),
+                array(
+                    'field' => 'sam_year_id',
+                    'label' => 'Semester/Year',
+                    'rules' => 'trim|required|numeric'
+                ),
+                array(
+                    'field' => 'subject_id',
+                    'label' => 'Subject',
+                    'rules' => 'trim|required|numeric'
+                ),
+                array(
+                    'field' => 'subject_topics_id',
+                    'label' => 'Subject Topic/Chapter',
+                    'rules' => 'trim|required|numeric'
+                ),
+                array(
+                    'field' => 'question_type_marks',
+                    'label' => 'Question Category/Type',
+                    'rules' => 'trim|required|numeric'
+                )
+            );
+            $this->form_validation->set_rules($config);
+
+            if ($this->form_validation->run() == FALSE) {
+
+                $this->session->set_flashdata('status', 'danger');
+                $this->session->set_flashdata('alert_msg', 'Oops! Unable to add question, Please try after sometime.');
+
+                redirect(base_url('admin/qbm/questions/add?' . $url_data));
+            } else {
+
+                $question_bank_array = array(
+                    'course_id' => $this->input->post('course_id'),
+                    'sam_year_id' => $this->input->post('sam_year_id'),
+                    'discipline_id' => NULL,
+                    'group_trade_id' => NULL,
+                    'subject_group_id' => NULL,
+                    'subject_id' => $this->input->post('subject_id'),
+                    'topic_chapter_id' => $this->input->post('subject_topics_id'),
+                    'question_type_mark_id' => $this->input->post('question_type_marks'),
+                    'total_no_of_question' => count($this->input->post('question')),
+                    'entry_time' => "now()",
+                    'entry_ip' => $this->input->ip_address(),
+                    'entry_by' => $this->session->userdata('stake_details_id_fk'),
+                );
+
+                $eng_question_array = array();
+
+                // ! Starting Transaction
+                $this->db->trans_start(); # Starting Transaction
+
+                $question_id = $this->questions_model->insert_question_bank($question_bank_array);
+                if ($question_id) {
+
+                    foreach ($data['question'] as $key => $question) {
+
+                        $question_pic = NULL;
+
+                        if (!empty($_FILES['question_pic']['tmp_name'][$key])) {
+                            $question_pic = base64_encode(file_get_contents($_FILES["question_pic"]['tmp_name'][$key]));
+                        }
+
+                        $tmp_array = array(
+                            'question_id_fk' => $question_id,
+                            'question' => $question,
+                            'question_clue' => $data['question_clue'][$key],
+                            'question_pic' => $question_pic,
+                            'per_question_marks' => $data['per_question_marks'][$key],
+                            'q_type' => $data['q_type'][$key],
+                        );
+
+                        array_push($eng_question_array, $tmp_array);
+                    }
+                    $this->questions_model->insert_batch_eng_question($eng_question_array);
+
+                    // ! Completing transaction
+                    $this->db->trans_complete(); # Completing transaction
+
+                    // ! Check All Query For Trainee
+                    if ($this->db->trans_status() === FALSE) {
+                        # Something went wrong.
+                        $this->db->trans_rollback();
+
+                        $this->session->set_flashdata('status', 'danger');
+                        $this->session->set_flashdata('alert_msg', 'Oops! Unable to add question, Please try after sometime.');
+                    } else {
+                        # Everything is Perfect. Committing data to the database.
+                        $this->db->trans_commit();
+
+                        $this->session->set_flashdata('status', 'success');
+                        $this->session->set_flashdata('alert_msg', 'Question has been added successfully.');
+                    }
+                } else {
+
+                    $this->session->set_flashdata('status', 'danger');
+                    $this->session->set_flashdata('alert_msg', 'Oops! Unable to add question, Please try after sometime.');
+                }
+
+                redirect(base_url('admin/qbm/questions/add?' . $url_data));
+            }
+        } else {
+            redirect(base_url('admin/qbm/questions/add'));
+        }
+    }
+
+    public function create()
+    {
+        $stake_details_id_fk = $this->session->userdata('stake_details_id_fk');
+        $data['courseList'] = $this->questions_model->getCourseList($stake_details_id_fk);
+
+        if ($this->input->server("REQUEST_METHOD") == "POST") {
+
+            $this->load->library('form_validation');
+            $this->form_validation->set_error_delimiters('<div class="text-red">', '</div>');
+
+            // ! Create GET data for store value in url
+            $crk = $this->input->post('course_id');
+            $syrk = $this->input->post('sam_year_id');
+            $srk = $this->input->post('subject_id');
+            $strk = $this->input->post('subject_topics_id');
+            $qtmrk = $this->input->post('question_type_marks');
+
+            $url_data = "crk=$crk&syrk=$syrk&srk=$srk&strk=$strk&qtmrk=$qtmrk";
+
+            $data['q_type'] = $this->input->post('q_type');
+            $data['question'] = $this->input->post('question');
+            $data['question_clue'] = $this->input->post('question_clue');
+            $data['per_question_marks'] = $this->input->post('per_question_marks');
+
+            $config = array(
+                array(
+                    'field' => 'course_id',
+                    'label' => 'Course',
+                    'rules' => 'trim|required|numeric'
+                ),
+                array(
+                    'field' => 'sam_year_id',
+                    'label' => 'Semester/Year',
+                    'rules' => 'trim|required|numeric'
+                ),
+                array(
+                    'field' => 'subject_id',
+                    'label' => 'Subject',
+                    'rules' => 'trim|required|numeric'
+                ),
+                array(
+                    'field' => 'subject_topics_id',
+                    'label' => 'Subject Topic/Chapter',
+                    'rules' => 'trim|required|numeric'
+                ),
+                array(
+                    'field' => 'question_type_marks',
+                    'label' => 'Question Category/Type',
+                    'rules' => 'trim|required|numeric'
+                )
+            );
+            $this->form_validation->set_rules($config);
+
+            if ($this->form_validation->run() == FALSE) {
+
+                $this->session->set_flashdata('status', 'danger');
+                $this->session->set_flashdata('alert_msg', 'Oops! Unable to add question, Please try after sometime.');
+                // parent::pre(validation_errors());
+                redirect(base_url('admin/qbm/questions/add?' . $url_data));
+            } else {
+
+                $question_bank_array = array(
+                    'course_id' => $this->input->post('course_id'),
+                    'sam_year_id' => $this->input->post('sam_year_id'),
+                    'discipline_id' => NULL,
+                    'group_trade_id' => NULL,
+                    'subject_group_id' => NULL,
+                    'subject_id' => $this->input->post('subject_id'),
+                    'topic_chapter_id' => $this->input->post('subject_topics_id'),
+                    'question_type_mark_id' => $this->input->post('question_type_marks'),
+                    'total_no_of_question' => count($this->input->post('question')),
+                    'entry_time' => "now()",
+                    'entry_ip' => $this->input->ip_address(),
+                    'entry_by' => $this->session->userdata('stake_details_id_fk'),
+                );
+
+                // ! Starting Transaction
+                $this->db->trans_start(); # Starting Transaction
+
+                $question_id = $this->questions_model->insert_question_bank($question_bank_array);
+                if ($question_id) {
+
+                    foreach ($data['question'] as $key => $question) {
+
+                        $question_pic = NULL;
+                        $file_validation_err = 0;
+                        $max_size = 502400; // 100KB Size
+
+                        if ($_FILES['question_pic']['name'][$key] != '') {
+
+                            $file_name = $_FILES['question_pic']['name'][$key];
+                            $extension = pathinfo($file_name, PATHINFO_EXTENSION);
+
+                            if ($_FILES['question_pic']['size'][$key] > $max_size || (strtoupper($extension) != "JPG" && strtoupper($extension) != "JPEG")) {
+                                $file_validation_err = 1;
+                                $data['file_error'] = "Max 100 kb and image format should be JPG/JPEG";
+                            } else {
+                                $question_pic = base64_encode(file_get_contents($_FILES["question_pic"]['tmp_name'][$key]));
+                            }
+                        }
+						
+						// Question Clue Pic added by Moli
+
+                        if ($_FILES['answer_pic']['name'][$key] != '') {
+
+                            $file_name = $_FILES['answer_pic']['name'][$key];
+                            $extension = pathinfo($file_name, PATHINFO_EXTENSION);
+
+                            if ($_FILES['answer_pic']['size'][$key] > $max_size || (strtoupper($extension) != "JPG" && strtoupper($extension) != "JPEG")) {
+                                $file_validation_err = 1;
+                                $data['file_error'] = "Max 100 kb and image format should be JPG/JPEG";
+                            } else {
+                                $answer_pic = base64_encode(file_get_contents($_FILES["answer_pic"]['tmp_name'][$key]));
+                            }
+                        }
+
+                        // Question Clue Pic added by Moli
+
+                        if ($file_validation_err == 0) {
+
+                            $eng_question_array = array(
+                                'question_id_fk' => $question_id,
+                                'question' => $question,
+                                'question_clue' => $data['question_clue'][$key],
+                                'question_pic' => $question_pic,
+                                'answer_pic' => $answer_pic, //added by Moli
+                                'per_question_marks' => $data['per_question_marks'][$key],
+                                'q_type' => $data['q_type'][$key],
+                                'entry_time' => "now()",
+                                'entry_ip' => $this->input->ip_address(),
+                                'entry_by' => $this->session->userdata('stake_details_id_fk'),
+                            );
+
+                            $this->questions_model->insert_eng_question($eng_question_array);
+                        } else {
+                            $this->db->trans_rollback();
+
+                            $this->session->set_flashdata('status', 'danger');
+                            $this->session->set_flashdata('alert_msg', $data['file_error']);
+
+                            redirect(base_url('admin/qbm/questions/add?' . $url_data));
+                        }
+                    }
+
+                    // ! Completing transaction
+                    $this->db->trans_complete(); # Completing transaction
+
+                    // ! Check All Query For Trainee
+                    if ($this->db->trans_status() === FALSE) {
+                        # Something went wrong.
+                        $this->db->trans_rollback();
+
+                        $this->session->set_flashdata('status', 'danger');
+                        $this->session->set_flashdata('alert_msg', 'Oops! Unable to add question, Please try after sometime.');
+                    } else {
+                        # Everything is Perfect. Committing data to the database.
+                        $this->db->trans_commit();
+
+                        $this->session->set_flashdata('status', 'success');
+                        $this->session->set_flashdata('alert_msg', 'Question has been added successfully.');
+                    }
+                } else {
+
+                    $this->session->set_flashdata('status', 'danger');
+                    $this->session->set_flashdata('alert_msg', 'Oops! Unable to add question, Please try after sometime.');
+                }
+
+                redirect(base_url('admin/qbm/questions/add?' . $url_data));
+            }
+        } else {
+            redirect(base_url('admin/qbm/questions/add'));
+        }
+    }
+
+    public function get_semester_subject_list()
+    {
+        if (!$this->input->is_ajax_request()) {
+            exit('No direct script access allowed');
+        } else {
+
+            $course_id = $this->input->get('course_id');
+            $stake_details_id_fk = $this->session->userdata('stake_details_id_fk');
+
+            if (!empty($course_id)) {
+
+                $semester_list = $this->questions_model->getSemesterList($stake_details_id_fk, $course_id);
+                $subject_list = $this->questions_model->getSubjectListByCourseId($stake_details_id_fk, $course_id);
+
+                $semester_html_view = '<option value="">-- Select Semester/Year --</option>';
+                $subject_html_view = '<option value="">-- Select Subject --</option>';
+
+                if (!empty($semester_list) && !empty($subject_list)) {
+                    foreach ($semester_list as $key => $value) {
+
+                        $semester_html_view .= '
+							<option value="' . $value['semester_id_pk'] . '">
+								' . $value['semester_name'] . '
+							</option>
+						';
+                    }
+
+                    foreach ($subject_list as $key => $value) {
+
+                        $subject_html_view .= '
+                            <option value="' . $value['subject_id_pk'] . '">
+                                ' . $value['subject_name'] . ' [' . $value['subject_code'] . ']
+                            </option>
+						';
+                    }
+                } else {
+                    $semester_html_view .= '<option value="" disabled="true">No data found...</option>';
+                    $subject_html_view .= '<option value="" disabled="true">No data found...</option>';
+                }
+
+                echo json_encode(array(
+                    'semester_html_view' => $semester_html_view,
+                    'subject_html_view' => $subject_html_view,
+                ));
+            }
+        }
+    }
+	
+	// Added on 23-02-2022
+
+public function get_semester_list()
+    {
+        if (!$this->input->is_ajax_request()) {
+            exit('No direct script access allowed');
+        } else {
+
+            $course_id = $this->input->get('course_id');
+            $stake_details_id_fk = $this->session->userdata('stake_details_id_fk');
+
+            if (!empty($course_id)) {
+
+                $semester_list = $this->questions_model->getSemesterList($stake_details_id_fk, $course_id);
+                //$subject_list = $this->questions_model->getSubjectListByCourseId($stake_details_id_fk, $course_id);
+
+                $semester_html_view = '<option value="">-- Select Semester/Year --</option>';
+                //$subject_html_view = '<option value="">-- Select Subject --</option>';
+
+                if (!empty($semester_list)) {
+                    foreach ($semester_list as $key => $value) {
+
+                        $semester_html_view .= '
+							<option value="' . $value['semester_id_pk'] . '">
+								' . $value['semester_name'] . '
+							</option>
+						';
+                    }
+
+                    
+                } else {
+                    $semester_html_view .= '<option value="" disabled="true">No data found...</option>';
+                    //$subject_html_view .= '<option value="" disabled="true">No data found...</option>';
+                }
+
+                echo json_encode(array(
+                    'semester_html_view' => $semester_html_view,
+                    
+                ));
+            }
+        }
+    }
+	
+	
+	public function get_subject_list_by_course_sem()
+    {
+        if (!$this->input->is_ajax_request()) {
+            exit('No direct script access allowed');
+        } else {
+
+            $course_id = $this->input->get('course_id');
+			$sam_year_id = $this->input->get('sam_year_id');
+            $stake_details_id_fk = $this->session->userdata('stake_details_id_fk');
+
+            if (!empty($course_id)) {
+
+                //$semester_list = $this->questions_model->getSemesterList($stake_details_id_fk, $course_id);
+                $subject_list = $this->questions_model->getSubjectListByCourseIdSemId($stake_details_id_fk, $course_id,$sam_year_id);
+
+                //$semester_html_view = '<option value="">-- Select Semester/Year --</option>';
+                $subject_html_view = '<option value="">-- Select Subject --</option>';
+
+                if (!empty($subject_list)) {
+                    foreach ($subject_list as $key => $value) {
+
+                        $subject_html_view .= '
+                            <option value="' . $value['subject_id_pk'] . '">
+                                ' . $value['subject_name'] . ' [' . $value['subject_code'] . ']
+                            </option>
+						';
+                    }
+
+                    
+                } else {
+                    //$semester_html_view .= '<option value="" disabled="true">No data found...</option>';
+                    $subject_html_view .= '<option value="" disabled="true">No data found...</option>';
+                }
+
+                echo json_encode(array(
+                    'subject_html_view' => $subject_html_view,
+                    
+                ));
+            }
+        }
+    }
+	
+	//Added on 23-02-2022
+
+    public function get_disciplines()
+    {
+        if (!$this->input->is_ajax_request()) {
+            exit('No direct script access allowed');
+        } else {
+
+            $course_id = $this->input->get('course_id');
+            $stake_details_id_fk = $this->session->userdata('stake_details_id_fk');
+
+            if (!empty($course_id)) {
+
+                $discipline_list = $this->questions_model->getDisciplineList($stake_details_id_fk, $course_id);
+                $semester_list = $this->questions_model->getSemesterList($stake_details_id_fk, $course_id);
+
+                $discipline_html_view = '<option value="">-- Select Discipline --</option>';
+                $semester_html_view = '<option value="">-- Select Semester/Year --</option>';
+
+                if (!empty($discipline_list) && !empty($semester_list)) {
+                    foreach ($discipline_list as $key => $value) {
+
+                        $discipline_html_view .= '
+							<option value="' . $value['discipline_id_pk'] . '">
+								' . $value['discipline_name'] . ' [' . $value['discipline_code'] . ']
+							</option>
+						';
+                    }
+
+                    foreach ($semester_list as $key => $value) {
+
+                        $semester_html_view .= '
+							<option value="' . $value['semester_id_pk'] . '">
+								' . $value['semester_name'] . '
+							</option>
+						';
+                    }
+                } else {
+                    $discipline_html_view .= '<option value="" disabled="true">No data found...</option>';
+                    $semester_html_view .= '<option value="" disabled="true">No data found...</option>';
+                }
+
+                echo json_encode(array(
+                    'discipline_html_view' => $discipline_html_view,
+                    'semester_html_view' => $semester_html_view,
+                ));
+            }
+        }
+    }
+
+    public function get_subject()
+    {
+        if (!$this->input->is_ajax_request()) {
+            exit('No direct script access allowed');
+        } else {
+
+            $course_id = $this->input->get('course_id');
+            $discipline_id = $this->input->get('discipline_id');
+            $sam_year_id = $this->input->get('sam_year_id');
+            $stake_details_id_fk = $this->session->userdata('stake_details_id_fk');
+
+            if (!empty($discipline_id) && !empty($sam_year_id)) {
+                $subject_list = $this->questions_model->getSubjectList($course_id, $stake_details_id_fk, $discipline_id, $sam_year_id);
+
+                $html_view = '<option value="">-- Select Subject --</option>';
+
+                if (!empty($subject_list)) {
+                    foreach ($subject_list as $key => $value) {
+
+                        $html_view .= '
+                        <option value="' . $value['subject_id_pk'] . '">
+                            ' . $value['subject_name'] . ' [' . $value['subject_code'] . ']
+                        </option>
+                    ';
+                    }
+                } else {
+                    $html_view .= '<option value="" disabled="true">No data found...</option>';
+                }
+
+                echo json_encode($html_view);
+            }
+        }
+    }
+
+    public function get_group_trade()
+    {
+        if (!$this->input->is_ajax_request()) {
+            exit('No direct script access allowed');
+        } else {
+
+            $discipline_id = $this->input->get('discipline_id');
+            $stake_details_id_fk = $this->session->userdata('stake_details_id_fk');
+
+            if (!empty($discipline_id)) {
+                $group_trade_list = $this->questions_model->getGroupTradeList($stake_details_id_fk, $discipline_id);
+
+                $html_view = '<option value="">-- Select Group/Trade --</option>';
+
+                if (!empty($group_trade_list)) {
+                    foreach ($group_trade_list as $key => $value) {
+
+                        $html_view .= '
+							<option value="' . $value['group_trade_id_pk'] . '">
+								' . $value['group_trade_name'] . ' [' . $value['group_trade_code'] . ']
+							</option>
+						';
+                    }
+                } else {
+                    $html_view .= '<option value="" disabled="true">No data found...</option>';
+                }
+
+                echo json_encode($html_view);
+            }
+        }
+    }
+
+    public function get_subject_group_category()
+    {
+        if (!$this->input->is_ajax_request()) {
+            exit('No direct script access allowed');
+        } else {
+
+            $subject_group_list = $this->questions_model->getSubjectGroupCategory();
+            $html_view = '<option value="">-- Select Group/Category --</option>';
+
+            if (!empty($subject_group_list)) {
+                foreach ($subject_group_list as $key => $value) {
+
+                    $html_view .= '
+							<option value="' . $value['subject_category_id_pk'] . '">
+								' . $value['subject_category_name'] . ' 
+							</option>
+						';
+                }
+            } else {
+                $html_view .= '<option value="" disabled="true">No data found...</option>';
+            }
+
+            echo json_encode($html_view);
+        }
+    }
+
+    public function get_subject_by_subject_group_trade()
+    {
+        if (!$this->input->is_ajax_request()) {
+            exit('No direct script access allowed');
+        } else {
+
+            $group_trade_id = $this->input->get('group_trade_id');
+            $subject_group_id = $this->input->get('subject_group_id');
+
+            if (!empty($group_trade_id) && !empty($subject_group_id)) {
+                $subject_list = $this->questions_model->getSubjectBySubjectGroupTrade($group_trade_id, $subject_group_id);
+
+                $html_view = '<option value="">-- Select Subject --</option>';
+
+                if (!empty($subject_list)) {
+                    foreach ($subject_list as $key => $value) {
+
+                        $html_view .= '
+                        <option value="' . $value['subject_id_pk'] . '">
+                            ' . $value['subject_name'] . ' [' . $value['subject_code'] . ']
+                        </option>
+                    ';
+                    }
+                } else {
+                    $html_view .= '<option value="" disabled="true">No data found...</option>';
+                }
+
+                echo json_encode($html_view);
+            }
+        }
+    }
+
+    public function get_topic_chapter()
+    {
+        if (!$this->input->is_ajax_request()) {
+            exit('No direct script access allowed');
+        } else {
+
+            $subject_id = $this->input->get('subject_id');
+            $sam_year_id = $this->input->get('sam_year_id');
+            $stake_details_id_fk = $this->session->userdata('stake_details_id_fk');
+
+            if (!empty($subject_id)) {
+                $topic_list = $this->questions_model->getTopicChapterList($subject_id, $sam_year_id);
+                $subjectQuestionTypeMark = $this->questions_model->getSubjectQuestionTypeMark($subject_id,$sam_year_id);
+
+                $html_view_topic = '<option value="">-- Select Topic/Chapter --</option>';
+                $html_view_QuestionTypeMark = '<option value="">-- Select Question Category/Type --</option>';
+
+                if (!empty($topic_list)) {
+                    foreach ($topic_list as $key => $value) {
+
+                        $html_view_topic .= '
+                        <option value="' . $value['subject_topics_map_id_pk'] . '">
+                            ' . $value['topics_chapter_name'] . '
+                        </option>
+                    ';
+                    }
+                } else {
+                    $html_view_topic .= '<option value="" disabled="true">No data found...</option>';
+                }
+
+                if (!empty($subjectQuestionTypeMark)) {
+                    foreach ($subjectQuestionTypeMark as $key => $value) {
+
+                        $html_view_QuestionTypeMark .= '
+                        <option value="' . $value['question_type_mark_id_pk'] . '" data-marks="' . $value['question_mark'] . '">
+                            ' . $value['question_type_name'] . '
+                            [' . $value['question_mark'] . ']
+                        </option>
+                    ';
+                    }
+                } else {
+                    $html_view_QuestionTypeMark .= '<option value="" disabled="true">No data found...</option>';
+                }
+
+                $response = array(
+                    'html_view_topic' => $html_view_topic,
+                    'html_view_QuestionTypeMark' => $html_view_QuestionTypeMark,
+                );
+                echo json_encode($response);
+            }
+        }
+    }
+
+    public function updateEngQuestion($id_hash = NULL)
+    {
+        if ($this->input->server('REQUEST_METHOD') == 'POST') {
+
+            $question_details = $this->questions_model->getEngQuestionList($id_hash);
+
+            $data['question'] = $this->input->post('question');
+            $data['question_clue'] = $this->input->post('question_clue');
+            $data['per_question_marks'] = $this->input->post('per_question_marks');
+            $data['q_type'] = $this->input->post('q_type');
+            $data['eng_question_id'] = $this->input->post('eng_question_id');
+
+            foreach ($data['question'] as $key => $question) {
+
+                $question_pic = NULL;
+                $file_validation_err = 0;
+                $max_size = 502400; // 100KB Size
+
+                if ($_FILES['question_pic']['name'][$key] != '') {
+
+                    $file_name = $_FILES['question_pic']['name'][$key];
+                    $extension = pathinfo($file_name, PATHINFO_EXTENSION);
+
+                    if ($_FILES['question_pic']['size'][$key] > $max_size || (strtoupper($extension) != "JPG" && strtoupper($extension) != "JPEG")) {
+                        $file_validation_err = 1;
+                        $data['file_error'] = "Max 100 kb and JPG/JPEG";
+                    } else {
+                        $question_pic = base64_encode(file_get_contents($_FILES["question_pic"]['tmp_name'][$key]));
+                    }
+                }
+				
+				 // Added By Moli 22-02-2022
+
+                if ($_FILES['answer_pic']['name'][$key] != '') {
+
+                    $file_name = $_FILES['answer_pic']['name'][$key];
+                    $extension = pathinfo($file_name, PATHINFO_EXTENSION);
+
+                    if ($_FILES['answer_pic']['size'][$key] > $max_size || (strtoupper($extension) != "JPG" && strtoupper($extension) != "JPEG")) {
+                        $file_validation_err = 1;
+                        $data['file_error'] = "Max 100 kb and JPG/JPEG";
+                    } else {
+                        $answer_pic = base64_encode(file_get_contents($_FILES["answer_pic"]['tmp_name'][$key]));
+                    }
+                }
+
+                // Added By Moli 22-02-2022
+
+                if ($file_validation_err == 0) {
+                    if (!empty($question) && !empty($data['question_clue'][$key])) {
+
+                        $eng_question_id_hash = $data['eng_question_id'][$key];
+
+                        $updateArray = array(
+                            'question'           => $question,
+                            'question_clue'      => $data['question_clue'][$key],
+                            'per_question_marks' => $data['per_question_marks'][$key],
+                            'q_type'             => $data['q_type'][$key],
+                            'updated_time'       => "now()",
+                            'updated_by'         => $this->session->userdata('stake_details_id_fk'),
+                            'updated_ip'         => $this->input->ip_address(),
+                        );
+
+                        if ($_FILES['question_pic']['name'][$key] != '') {
+                            $updateArray['question_pic'] = $question_pic;
+                        }
+						// Added By Moli 22-02-2022
+                        if ($_FILES['answer_pic']['name'][$key] != '') {
+                            $updateArray['answer_pic'] = $answer_pic;
+                        }
+                        // Added By Moli 22-02-2022
+                    } else {
+                        $this->session->set_flashdata('status', 'danger');
+                        $this->session->set_flashdata('alert_msg', 'Oops! Unable to add question, Please try after sometime.');
+
+                        redirect(base_url('admin/qbm/questions?sub=' . md5($question_details[0]['subject_id'])));
+                        exit();
+                    }
+                } else {
+                    $this->session->set_flashdata('status', 'danger');
+                    $this->session->set_flashdata('alert_msg', 'Please provide valid file(JPG/JPEG) within mentioned size');
+
+                    redirect(base_url('admin/qbm/questions?sub=' . md5($question_details[0]['subject_id'])));
+                    exit();
+                }
+
+                $this->questions_model->updateEngQuestionBank($eng_question_id_hash, $updateArray);
+            }
+
+            $this->session->set_flashdata('status', 'success');
+            $this->session->set_flashdata('alert_msg', 'Question has been Updated successfully.');
+
+            redirect(base_url('admin/qbm/questions?sub=' . md5($question_details[0]['subject_id'])));
+        } else {
+            redirect(base_url('admin/qbm/questions'));
+        }
+    }
+	
+	//Added by Moli 22-02-2022
+
+    public function eng_question_clue_image($id_hash = NULL)
+    {
+        if (!empty($id_hash)) {
+
+            $eng_question_details = $this->questions_model->getEngQuestionDetails($id_hash);
+            if (!empty($eng_question_details)) {
+
+                $answer_pic = $eng_question_details[0]['answer_pic'];
+
+                $img_name = 'IMG-' . date('Ymd') . '-' . date('his') . '.JPG';
+
+                header("Content-type:image/jpeg");
+
+                header("Content-Disposition:attachment;filename=" . $img_name);
+
+                echo base64_decode($answer_pic);
+            }
+        } else {
+            redirect('admin/qbm_question/manage_question');
+        }
+    }
+	 public function other_question_clue_image($id_hash = NULL)
+    {
+        if (!empty($id_hash)) {
+
+            $eng_question_details = $this->questions_model->getOtherQuestionDetails($id_hash);
+            if (!empty($eng_question_details)) {
+
+                $question_pic = $eng_question_details[0]['question_pic'];
+
+                $img_name = 'IMG-' . date('Ymd') . '-' . date('his') . '.JPG';
+
+                header("Content-type:image/jpeg");
+
+                header("Content-Disposition:attachment;filename=" . $img_name);
+
+                echo base64_decode($question_pic);
+            }
+        } else {
+            redirect('admin/qbm_question/manage_question');
+        }
+    }
+
+}

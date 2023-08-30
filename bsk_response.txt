@@ -1,0 +1,24 @@
+{"agId":"BSK","encData":"m4p3CxxkyshZk6hQdSi509Uu3Gn8i4MXIz\/uqgSl40FkITjK4uz4Eg7Y2rkr4dWEGC\/U1KEi8G+dwc5EkLguoy9Q71GtjQ9r\/txux54ffmCDzuEfb3D6zTUMQx8MZQrVEsMDEDHXOiY52k4TDRSdzw=="}
+------->>>>>>>>>>>>Created date is------2023-03-05 11:46:26am--
+{"agId":"BSK","encData":"m4p3CxxkyshZk6hQdSi509Uu3Gn8i4MXIz\/uqgSl40FkITjK4uz4Eg7Y2rkr4dWEGC\/U1KEi8G+dwc5EkLguoy9Q71GtjQ9r\/txux54ffmCDzuEfb3D6zTUMQx8MZQrVEsMDEDHXOiY52k4TDRSdzw=="}
+------->>>>>>>>>>>>Created date is------2023-03-05 12:12:59pm--
+{"agId":"BSK","encData":"m4p3CxxkyshZk6hQdSi509Uu3Gn8i4MXIz\/uqgSl40FkITjK4uz4Eg7Y2rkr4dWEGC\/U1KEi8G+dwc5EkLguoy9Q71GtjQ9r\/txux54ffmCDzuEfb3D6zTUMQx8MZQrVEsMDEDHXOiY52k4TDRSdzw=="}
+------->>>>>>>>>>>>Created date is------2023-03-05 12:13:53pm--
+{"agId":"BSK","encData":"m4p3CxxkyshZk6hQdSi509Uu3Gn8i4MXIz\/uqgSl40FkITjK4uz4Eg7Y2rkr4dWEGC\/U1KEi8G+dwc5EkLguoy9Q71GtjQ9r\/txux54ffmCDzuEfb3D6zTUMQx8MZQrVEsMDEDHXOiY52k4TDRSdzw=="}
+------->>>>>>>>>>>>Created date is------2023-03-05 12:57:43pm--
+{"agId":"BSK","encData":"m4p3CxxkyshZk6hQdSi509Uu3Gn8i4MXIz\/uqgSl40FkITjK4uz4Eg7Y2rkr4dWEGC\/U1KEi8G+dwc5EkLguoy9Q71GtjQ9r\/txux54ffmCDzuEfb3D6zTUMQx8MZQrVEsMDEDHXOiY52k4TDRSdzw=="}
+------->>>>>>>>>>>>Created date is------2023-03-05 01:01:46pm--
+{"csrf_council":"66a26d2c83bbb4f44d1e244fa624f70f","courses":"","fullname":"","stdEmail":"","stdMobileNo":"","bsk_ticket_no":"20230305113350474","aadhar_no":""}
+------->>>>>>>>>>>>Created date is------2023-03-05 01:01:57pm--
+{"agId":"BSK","encData":"m4p3CxxkyshZk6hQdSi509Uu3Gn8i4MXIz\/uqgSl40FkITjK4uz4Eg7Y2rkr4dWEGC\/U1KEi8G+dwc5EkLguoy9Q71GtjQ9r\/txux54ffmCDzuEfb3D6zTUMQx8MZQrVEsMDEDHXOiY52k4TDRSdzw=="}
+------->>>>>>>>>>>>Created date is------2023-03-05 01:02:08pm--
+{"agId":"BSK","encData":"m4p3CxxkyshZk6hQdSi509Uu3Gn8i4MXIz\/uqgSl40FkITjK4uz4Eg7Y2rkr4dWEGC\/U1KEi8G+dwc5EkLguoy9Q71GtjQ9r\/txux54ffmCDzuEfb3D6zTUMQx8MZQrVEsMDEDHXOiY52k4TDRSdzw=="}
+------->>>>>>>>>>>>Created date is------2023-03-05 01:08:10pm--
+{"csrf_council":"6eaccd67b74764372f7956b8ba851ac5","courses":"","fullname":"","stdEmail":"","stdMobileNo":"9064956113","bsk_ticket_no":"20230305113350474","aadhar_no":""}
+------->>>>>>>>>>>>Created date is------2023-03-05 01:08:19pm--
+{"agId":"BSK","encData":"m4p3CxxkyshZk6hQdSi509Uu3Gn8i4MXIz\/uqgSl40FkITjK4uz4Eg7Y2rkr4dWEGC\/U1KEi8G+dwc5EkLguoy9Q71GtjQ9r\/txux54ffmCDzuEfb3D6zTUMQx8MZQrVEsMDEDHXOiY52k4TDRSdzw=="}
+------->>>>>>>>>>>>Created date is------2023-03-05 01:11:08pm--
+{"csrf_council":"d3290ba61a05b220171bfdd27625ebf2","courses":"","fullname":"","stdEmail":"","stdMobileNo":"9064956113","bsk_ticket_no":"20230305113350474","aadhar_no":""}
+------->>>>>>>>>>>>Created date is------2023-03-05 01:11:12pm--
+{"agId":"BSK","encData":"m4p3CxxkyshZk6hQdSi509Uu3Gn8i4MXIz\/uqgSl40FkITjK4uz4Eg7Y2rkr4dWEGC\/U1KEi8G+dwc5EkLguoy9Q71GtjQ9r\/txux54ffmCDzuEfb3D6zTUMQx8MZQrVEsMDEDHXOiY52k4TDRSdzw=="}
+------->>>>>>>>>>>>Created date is------2023-03-05 01:12:26pm--

@@ -1,0 +1,391 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>welcome </title>
+
+
+</head>
+
+<style>
+    #solid {
+        border-style: solid;
+    }
+</style>
+
+<body
+    style="background-image: url('<?php echo base_url() . 'admin/themes/adminlte/assets/image/certificate/bg-image5.jpg' ?>');background-repeat: no-repeat;">
+    <table>
+
+        <tr>
+            <td width="55%">
+
+                <table width="100%" border="0" style="border-radius:25px !important;border: 2px solid black;"
+                    cellspacing="0" cellpadding="0">
+                    <tr>
+                        <td style="padding:10px;">
+
+                            <img width="10%" height="10%"
+                                src="data:image/png;base64,<?php echo base64_encode( file_get_contents( 'admin/themes/adminlte/assets/image/certificate/logo.png')); ?>">
+                        </td>
+                        <td style="font-family:Arial; font-size:12px;line-height:0px;">
+                            <b>WEST BENGAL STATE COUNCIL OF TECHNICAL & VOCATIONAL <br> EDUCATION
+                                & SKILL DEVELOPMENT</b>
+                            <p style="font-family:arial; font-size:10px;">
+                                [A Statutory Body under Government of West Bengal Act XXVI of 2013]<br />
+                                <b style="font-size:11px;">(Formally West Bengal State Council of Technical
+                                    Education)</b>
+                            </p>
+                            <p style="font-size:8px;">"Karigori Bhavan", 4th Floor, Plot No. B/7, Action Area-III, New
+                                Town, Rajarhat, Kolkata-700160
+                            </p>
+                    </tr>
+
+                </table>
+            </td>
+            <td style="width:18%">
+                <table width="100%" style="border: 2px solid black;" cellspacing="0" cellpadding="0">
+                    <tr>
+                        <td>
+                            <center>
+                                <img width="15%" height="15%" src="data:image/png;base64,<?php echo $barcode ;?>">
+                            </center>
+
+
+                        </td>
+
+                    </tr>
+
+                </table>
+            </td>
+        </tr>
+    </table>
+
+    <table width="100%" style="border: 3px solid;border-top-left-radius:20px !important;margin-top:2px;">
+        <tr>
+            <td align="center" style="font-size:20px;padding:10px;font-family:Georgia;">
+                <b><span style="font-size:23px;">P</span>ROVISIONAL <span style="font-size:23px;">A</span>DMIT <span
+                        style="font-size:23px;">C</span>ARD</b>
+                <p style="font-size:13px;"> For admission to Polytechnics of West Bengal for the Academic Session
+                    2022-23 through JEXPO-2022</p>
+            </td>
+        </tr>
+    </table>
+
+    <table width="100%" style="border-radius:10px;border: 3px solid;margin-top:10px;">
+        <tr>
+            <td width="40%" style="padding:10px;float:left;"><strong>Index Number </strong> </td>
+            <td colspan="2" width="30%" style="float:left"><strong> :
+                    <?php echo $admitDetails[0]['index_number']; ?>
+                </strong></td>
+
+            <td rowspan="6" width="25%" style="float:right;padding-top:30px;">
+                <img width="150px" height="180px"
+                    src="data:image/jpeg;base64,<?php echo pg_unescape_bytea($admitDetails[0]['picture']); ?>">
+                <br /><br />
+                <p style="padding-right:10px;">
+                    <hr />
+                </p><br />
+                <img width="160px" height="50px"
+                    src="data:image/jpeg;base64,<?php echo pg_unescape_bytea($admitDetails[0]['sign']); ?>">
+                <hr />
+                <!-- <img width="120px" height="30px" src="data:image/png;base64,<?php echo base64_encode( file_get_contents( 'themes/adminlte/assets/image/certificate/logo.png')); ?>"><br />
+                <p> Senior Administrative Officer</p> -->
+
+            </td>
+
+        </tr>
+        <tr>
+            <td width="40%" style="padding:10px;float:left;"><strong>Application Form Number</strong> </td>
+            <td width="40%" style="float:left"> <strong>:
+                    <?php echo $admitDetails[0]['application_form_no']; ?>
+                </strong></td>
+            <!-- <td width="40%"></td> -->
+        </tr>
+
+        <tr>
+            <td width="40%" style="padding:10px;float:left;"><strong>Candidates Name </strong></td>
+            <td width="40%" style="float:left;"><strong>:
+                    <?php echo $admitDetails[0]['candidate_name']; ?>
+                </strong></td>
+            <!-- <td width="40%"></td> -->
+        </tr>
+
+        <tr>
+            <td width="40%" style="padding:10px;float:left;"><strong>Date of Birth</strong></td>
+            <td width="40%" style="float:left;"><strong> :
+                    <?php echo date('d-m-Y', strtotime($admitDetails[0]['date_of_birth'])); ?>
+                </strong></td>
+            <!-- <td width="40%"></td> -->
+
+        </tr>
+
+        <tr>
+            <td width="40%" style="padding:10px;float:left;"><strong>Category </strong></td>
+            <td width="40%" style="float:left;"><strong>:
+                    <?php echo $admitDetails[0]['caste_name']; ?>
+                </strong></td>
+            <!-- <td width="40%"></td> -->
+        </tr>
+
+        <tr>
+            <td width="40%" style="padding:10px;float:left;"><strong>Physically Challenged </strong>
+            <td width="40%" style="float:left;"><strong> :
+                    <?php echo $admitDetails[0]['handicapped']; ?>
+                </strong></td>
+            <!-- <td width="40%"></td> -->
+        </tr>
+        <tr>
+            <td width="30%" style="padding:10px;float:left;"><strong>Land Looser </strong></td>
+            <td width="30%" style="float:left;"><strong> :
+                    <?php echo $admitDetails[0]['land_loser']; ?>
+                </strong></td>
+            <!-- <td width="40%"></td> -->
+        </tr>
+        <tr>
+            <td width="30%" style="padding:10px;float:left"><strong>Seeking Admission under TFW? </strong></td>
+            <td width="30%" style="float:left"><strong> :
+                    <?php echo $admitDetails[0]['applied_under_tfw']; ?>
+                </strong></td>
+            <!-- <td width="40%">
+            </td> -->
+        </tr>
+
+        <tr>
+
+            <td colspan="2">
+                <table border="0" style="border:1px solid black;padding-left:10px;">
+                    <tr>
+                        <td><u><b>Name and address of the Examination centre:</u>
+                            <p>
+                                <?php echo $admitDetails[0]['centre_name']; ?>
+                            </p>
+                            <p>
+                                <?php echo $admitDetails[0]['centre_address']; ?>
+                            </p></b>
+                        </td>
+
+
+                    </tr>
+                </table>
+
+            </td>
+            <td width="15%"></td>
+            <td><img width="200px" height="50px"
+                    src="data:image/png;base64,<?php echo base64_encode( file_get_contents( 'admin/themes/adminlte/assets/image/certificate/sandip_kundu_sign.png')); ?>">
+                <p> Senior Administrative Officer</p>&nbsp; &nbsp;&nbsp;Technical Education
+            </td>
+
+
+        </tr>
+
+
+    </table>
+    <table width="100%" style="border: 3px solid;border-radius:25px;margin-top:8px;">
+        <tr>
+            <td align="center" style="font-size:14px;padding:8px;font-family:Georgia;">
+                <b>Date of Examination : 6<sup>th</sup> May, 2023 (Saturday)<br /> [Timings: 10 a.m. to 12 noon]</b>
+
+            </td>
+        </tr>
+    </table>
+
+
+    <?php
+    // if ($user_details[0]['exam_type_id_fk'] == 8 || $user_details[0]['exam_type_id_fk'] == 9 || $user_details[0]['exam_type_id_fk'] == 3) { 
+    ?>
+    <!-- <table width="100%" style="border: 1px solid;">
+            <tr>
+                <td colspan="2">Registration No (correspondence Qualification) :<strong><?php // echo $user_details[0]['last_reg_no']; 
+                                                                                        ?></strong></td>
+            </tr>
+
+
+            <tr>
+                <td>Qualification for Elegibility: <strong><?php // echo $user_details[0]['qualification_name']; ?></strong></td>
+                <td>Full Marks :<strong> <?php // echo $user_details[0]['fullmarks']; ?></strong></td>
+            </tr>
+
+            <tr>
+                <td width="50%">Marks Obtained :<strong><?php // echo $user_details[0]['marks_obtain']; ?></strong></td>
+                <td width="50%">Percentage : <strong><?php // echo  $user_details[0]['percentage']; ?></strong></td>
+
+            </tr>
+            <tr>
+                <td width="50%">Year of Passing :<strong><?php // echo $user_details[0]['year_of_passing']; ?></strong></td>
+                <td width="50%">Percentage of Marks &nbsp; <?php // echo $user_details[0]['marks_subject1_corr_qualification']; ?> : <strong><?php // echo $user_details[0]['thirdyr_or_physics_or_math_result']; ?></strong></td>
+            </tr>
+            <tr>
+                <td width="50%">Percentage of Marks &nbsp; <?php // echo $user_details[0]['marks_subject2_corr_qualification']; ?> : <strong><?php // echo $user_details[0]['secondyear_or_chemistry_or_physicalscience_or_science_result']; ?></strong></td>
+
+                <td width="50%">Percentage of Marks &nbsp; <?php // echo $user_details[0]['marks_subject3_corr_qualification']; ?>: <strong><?php // echo $user_details[0]['firstyear_or_hs_english_or_lifescience_result']; ?></strong></td>
+            </tr>
+        </table> -->
+    <?php // } 
+    ?>
+    <?php
+    // if ($user_details[0]['exam_type_id_fk'] == 1 || $user_details[0]['exam_type_id_fk'] == 2 || $user_details[0]['exam_type_id_fk'] == 4 || $user_details[0]['exam_type_id_fk'] == 5 || $user_details[0]['exam_type_id_fk'] == 6 || $user_details[0]['exam_type_id_fk'] == 7) { 
+    ?>
+    <!-- <table width="100%" style="border: 1px solid;">
+            <tr>
+                <td width="50%">Registration No (correspondence Qualification) :</td>
+                <td width="40%"><strong><?php // echo $user_details[0]['last_reg_no']; ?></strong></td>
+            </tr>
+            <tr>
+                <td width="50%">Qualification for Elegibility :</td>
+                <td width="50%"><strong><?php // echo  $user_details[0]['qualification_name']; ?></strong></td>
+            </tr>
+            <tr>
+                <td width="50%">Land Loser : <strong><?php // echo $user_details[0]['land_loser']; ?></strong></td>
+                <td width="50%">EWS : <strong><?php // echo $user_details[0]['ews']; ?></strong></td>
+            </tr>
+            <tr>
+                <td width="50%">Are You Wards of Ex-Serviceman : <strong><?php // echo $user_details[0]['wards_of_exserviceman']; ?></strong></td>
+                <td width="50%">TFW : <strong><?php // echo $user_details[0]['applied_under_tfw']; ?></strong></td>
+            </tr>
+
+        </table> -->
+    <?php // } 
+    ?>
+    <!-- <table width="100%" style="border: 1px solid;">
+
+        <tr>
+            <td colspan="2">Category :<strong><?php // echo $user_details[0]['caste_name']; ?></strong></td>
+
+        </tr>
+        <tr>
+            <td width="50%">Physically Challenged (Handicapped) : <strong><?php // echo $user_details[0]['handicapped']; ?></strong></td>
+            <td width="50%">Religion :<strong> <?php // echo $user_details[0]['religion_name']; ?></strong></td>
+        </tr>
+        <tr>
+            <td width="50%">Date Of Birth :<strong><?php echo date('d-m-Y', strtotime($user_details[0]['date_of_birth'])); ?></strong></td>
+            <td width="50%">Aadhar No : <strong><?php echo $user_details[0]['aadhar_no']; ?></strong></td>
+        </tr>
+    </table> -->
+    <!-- added by 22-03-2023 -->
+    <!-- <table width="100%" style="border: 1px solid;">
+
+        <tr>
+            <td colspan="2">
+                <center><u>Exam Preferred Zone</u></center>
+            </td>
+
+        </tr>
+        <tr>
+            <td width="50%">Preferred Zone1 : <strong><?php echo $user_details[0]['pref_zone1_name']; ?></strong></td>
+            <td width="50%">Preferred Zone2:<strong> <?php echo $user_details[0]['pref_zone2_name']; ?></strong></td>
+        </tr>
+
+    </table> -->
+
+    <!-- end 22-03-23 -->
+
+    <!-- <table width="100%" style="border: 1px solid;">
+        <tr>
+            <td colspan="2">
+                <center><u>Address Information</u></center>
+            </td>
+
+        </tr>
+        <tr>
+            <td width="50%">Address : <strong><?php echo $user_details[0]['address']; ?></strong></td>
+            <td width="50%">Police Station : <strong><?php echo $user_details[0]['police_station_name']; ?></strong></td>
+
+        </tr>
+        <tr>
+            <td width="50%">District : <strong><?php echo $user_details[0]['district_name']; ?></strong></td>
+            <td width="50%">State of Origin :<strong><?php echo $user_details[0]['state_name']; ?></strong></td>
+        </tr>
+        <tr>
+            <td width="50%">Pincode : <strong><?php echo $user_details[0]['pincode']; ?></strong></td>
+            <td width="50%">Nationality :<strong><?php echo $user_details[0]['nationality_name']; ?></strong></td>
+
+        </tr>
+    </table> -->
+
+    <!-- <br>
+    <br><br> -->
+    <?php
+    // if ($user_details[0]['exam_type_id_fk'] == 8 || $user_details[0]['exam_type_id_fk'] == 9 || $user_details[0]['exam_type_id_fk'] == 3) { 
+    ?>
+
+
+    <table width="100%" style="border: 3px solid;margin-top:5px;">
+        <tr>
+            <td align="center"><b>INSTRUCTIONS TO THE CANDIDATE<br />(Following instructions must be read carefully)</b>
+            </td>
+        </tr>
+        <tr>
+
+            <td>
+                <section style="font-size: 12px;">
+                    <ol>
+                        <li>Candidates should bring with them the downloaded Admit Card along with any original Photo
+                            Admit Card of Madhyamik/ Equivalent Examination or any other Photo Identity card e.g Voter
+                            ID Card, Aadhaar Card, etc. for proof of their identity, without which candidate may not be
+                            allowed to enter into the Examination Hall.</li>
+                        <li>Candidates must bring with them Black/Blue Point Pen Only.</li>
+                        <li>Candidates must enter the Examination Hall 30 minutes before the start of the examination to
+                            receive general instructions for answering MCQ type questions.</li>
+                        <li>Candidates will not be allowed to enter in the Examination Hall with Graph Papers, Log
+                            Tables, Calculators, Mobile Phone, Tab, Digital Diary, Pager, Digital Watch or any other
+                            electronics devices.</li>
+                        <li>This Provisional Admit Card must be shown to the officer supervising the examination as and
+                            when asked for.</li>
+                        <li>Violation of any instruction and adoption of any unfair means in the Examination Hall shall
+                            render the candidate liable for cancellation of his/her answer sheet and forfeiture of
+                            his/her claim for admission.</li>
+                        <li>All applicants who appear to be prima facie eligible are provisionally permitted to sit for
+                            this Joint Entrance Examination (JEXPO-2022). If after scrutiny at any stage, it is found
+                            that the applicant is otherwise ineligible, his/her candidature will be cancelled
+                            automatically even if he/she has appeared at the examination and secured a position in the
+                            merit list.</li>
+                        <li>In case any discrepancy is observed in the data printed on this Provisional Admit Card
+                            pertaining to the candidate’s personal details, the same should be brought to the notice of
+                            the Council before the date of the examination.</li>
+                        <li>Claim of seats reserved for SC/ST/OBC candidates is strictly for applicants having caste
+                            certificate originated in the State of West Bengal only. SC/ST/OBC candidates belonging to
+                            other state outside West Bengal shall be treated as General Category candidates.</li>
+                        <li>Original copy of SC/ST/OBC/PC/LLQ or TFW certificate, as applicable, will be required at the
+                            time of counselling and admission.</li>
+                        <li>Candidates must fill OMR Answer Sheet very carefully in consultation with this Provisional
+                            Admit Card and the Question Booklet.</li>
+                        <li>Rough work or any other type of writing should not be done on the OMR Answer Sheet. Question
+                            Booklet may be used for the purpose.</li>
+                        <li>Candidates may download the Sample OMR Answer Sheet from the website www.webscte.co.in.</li>
+                        <li>This Provisional Admit Card should be preserved by the candidates till completion of the
+                            entire admission process.</li>
+                        <li>No student will be allowed to enter in the examination centre/hall without face cover/mask.
+                            They should carry hand sanitizer during the examination for their own safety.</li>
+                    </ol>
+                </section>
+            </td>
+        </tr>
+
+    </table>
+    <?php
+    // } 
+    ?>
+
+
+    <?php
+    // if ($user_details[0]['exam_type_id_fk'] == 1 || $user_details[0]['exam_type_id_fk'] == 2 || $user_details[0]['exam_type_id_fk'] == 4 || $user_details[0]['exam_type_id_fk'] == 5 || $user_details[0]['exam_type_id_fk'] == 6 || $user_details[0]['exam_type_id_fk'] == 7) { 
+    ?>
+
+
+    <!-- <table width="100%" style="border: 1px solid;">
+
+            <tr>
+                <td>
+                    <section style="font-size: 13px;">You have successfully applied for <strong>JEXPO/VOCLET</strong> examination for admission in Polytechnics for the session 2023-2024.<br>The Examination will be held on 6th May,2023.<br>Admit card will be sent online 7 days before Examination.</section>
+                </td>
+            </tr>
+
+        </table> -->
+    <?php
+    // } 
+    ?>
+</body>
+
+</html>
