@@ -144,4 +144,33 @@ class Choice_filling extends NIC_Controller
     }
 
   }
+
+  // jexpo canditae
+  public function home_dist_jexpo_allotement(){
+
+    $condition = array(
+      'jexpo_weightage_marks !=' => 0,
+      'home_dist' => 1,
+      'tfw' => 1
+
+    );
+    $order_by = 'jexpo_firstsem_obtain_marks';
+   
+    $get_choice_data = $this->choice_filling_model->getAllchoiceData($condition,$order_by);
+    //echo "<pre>";print_r($get_choice_data);die;
+
+    foreach($get_choice_data as $val){
+      
+      $check_intake = $this->choice_filling_model->get_available_intake($val['institute_id'],$val['discipline_id_fk']);
+      if($check_intake['available_seat'] >0){
+        $this->choice_filling_model->upd_data('council_institute_course_student_transfer',$val['institute_student_details_id_fk'],$val['transfer_id_pk'],array('final_allotement' =>1));
+        $this->choice_filling_model->upd_data1('council_institute_course_student_transfer',$val['institute_student_details_id_fk'],$val['transfer_id_pk'],array('final_allotement' =>0));
+      }
+      
+    }
+
+    echo "<pre>";print_r($get_choice_data);die;
+  }
+
+
 }

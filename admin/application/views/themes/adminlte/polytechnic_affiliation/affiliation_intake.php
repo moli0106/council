@@ -2,7 +2,7 @@
 <?php $this->load->view($this->config->item('theme_uri') . 'layout/header_view'); ?>
  <?php $this->load->view($this->config->item('theme_uri') . 'layout/left_menu_view'); ?> 
  <style type="text/css">
- input[type=number]::-webkit-inner-spin-button,
+  input[type=number]::-webkit-inner-spin-button,
     input[type=number]::-webkit-outer-spin-button {
         -webkit-appearance: none;
         -moz-appearance: none;
@@ -48,7 +48,7 @@
   <div class="border" style="margin-top:10px;">
     <center>
       <h4 style="color:#246d8a;font-weight:bold;">Application Form for Affiliation or Renewal<br>
-    <?php echo $affiliation_data['affiliation_type']; ?> (Academic Session <?php echo $affiliation_year;?>)</h4>
+      <?php echo $affiliation_data['affiliation_type']; ?> (Academic Session <?php echo $affiliation_year;?>)</h4>
    </center>
    <hr>
    <?php $this->load->view($this->config->item('theme') . 'polytechnic_affiliation/common_view')?>
@@ -149,8 +149,7 @@
               <td><?php echo $row['intake_no'] ?></td>
               <td><?php echo $row['faculty'] ?></td>
               <td><?php echo $row['remarks'] ?></td>
-				<td><a class="btn btn-danger btn-sm" href="polytechnic_affiliation/affiliation/delete_staff_intake/4/<?php echo md5($affiliation_data['basic_affiliation_id_pk']) ?>/<?php echo md5($row['intake_details_id_pk']) ?>"><i class="fa fa-trash"> Delete</i></a></td>
-
+              <td><a class="btn btn-danger btn-sm" href="polytechnic_affiliation/affiliation/delete_staff_intake/4/<?php echo md5($affiliation_data['basic_affiliation_id_pk']) ?>/<?php echo md5($row['intake_details_id_pk']) ?>"><i class="fa fa-trash"> Delete</i></a></td>
             </tr>
             <?php }?>
             </table>
@@ -223,8 +222,8 @@
                   <option value="B.A.(Hons)">B.A.(Hons)</option>
                   <option value="B.Arch">B.Arch</option>
                   <option value="BCA">BCA</option>
-				  <option value="Higher Secondary">Higher Secondary</option>
-				  <option value="ITI">ITI</option>
+                  <option value="Higher Secondary">Higher Secondary</option>
+				          <option value="ITI">ITI</option>
                   <option value="L.L.B.">L.L.B.</option>
                   <option value="M.TECH">M.TECH</option>
                   <option value="M.PHARM">M.PHARM</option>
@@ -241,7 +240,7 @@
                   <option value="MBBS">MBBS</option>
                   <option value="MD">MD</option>
                   <option value="MS">MS</option>
-				  <option value="Madhyamik">Madhyamik</option>
+                  <option value="Madhyamik">Madhyamik</option>
                   <option value="MPhil">MPhil</option>
                   <option value="PHD-HUMANITIES">PHD-HUMANITIES</option>
                   <option value="PHD-PHARM">PHD-PHARM</option>
@@ -255,23 +254,24 @@
                 <label>Faculty Type *</label>
                 <select name="engagement_type" id="engagement_type" class="form-control" required="">
                   <option value="">-Select-</option>
-				  <option value="Asst Professor">Asst Professor</option>
-				  <option value="Associate Professor">Associate Professor</option>
+                  <option value="Asst Professor">Asst Professor</option>
+				          <option value="Associate Professor">Associate Professor</option>
                   <option value="Lecturer (Full-Time)">Lecturer (Full-Time)</option>
                   <option value="Lecturer (Contractual)">Lecturer (Contractual)</option>
                   <option value="Lecturer (Part-Time)">Lecturer (Part-Time)</option>
                   <option value="Instructor">Instructor</option>
                   <option value="Laboratory Assistant">Laboratory Assistant</option>
-				  <option value="Other">Other</option>
+                  <option value="Other">Other</option>
                 </select>
                 <?php echo form_error('engagement_type'); ?>
               </div>
-			  
-			  <div class="col-md-3 other_faculty" <?php if(set_value('engagement_type')!= 'Other' || set_value('engagement_type') == NULL)echo 'style="display: none;"'; ?> >
+
+              <div class="col-md-3 other_faculty" <?php if(set_value('engagement_type')!= 'Other' || set_value('engagement_type') == NULL)echo 'style="display: none;"'; ?> >
                 <label>Other Faculty Type *</label>
                 <input type="text" name="other_faculty" placeholder="Other Faculty Type" class="form-control">
                 <?php echo form_error('other_faculty'); ?>
               </div>
+
 
               <div class="col-md-3">
                 <label>Years of Experience (in Teaching/Lecturer) *</label>
@@ -315,9 +315,9 @@
               <th>Branch / Department</th>
               <th>Name of Teachers</th>
               <th>Mobile No</th>
-			  <th>Highest Qualification</th>
+              <th>Highest Qualification</th>
               <th>Faculty Type</th>
-			  <th>Years of Experience</th>
+              <th>Years of Experience</th>
               <th>Date of Joining</th>
               <th>Monthly Salary (Rs.)</th>
               <th>Action</th>
@@ -328,7 +328,7 @@
               <td><?php echo $row['discipline_name'] ?></td>
               <td><?php echo $row['teacher_name'] ?></td>
               <td><?php echo $row['teacher_mobile'] ?></td>
-			  <td><?php echo $row['qualification'] ?></td>
+              <td><?php echo $row['qualification'] ?></td>
               <td><?php if ($row['engagement_type'] == 'Other'){ echo $row['engagement_type'] . '('.$row['other_faculty'] . ')';} else{echo $row['engagement_type'] ;}?></td>
               <td><?php echo $row['year_exp'] ?></td>
               <td><?php echo $row['join_date'] ?></td>
@@ -358,4 +358,3 @@
   </div>
 </div> 
 <?php $this->load->view($this->config->item('theme_uri') . 'layout/footer_view'); ?>
-

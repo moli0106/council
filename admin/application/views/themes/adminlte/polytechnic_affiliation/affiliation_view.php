@@ -1,7 +1,7 @@
 <?php $this->load->view($this->config->item('theme_uri') . 'layout/header_view'); ?>
  <?php $this->load->view($this->config->item('theme_uri') . 'layout/left_menu_view'); ?> 
  <style type="text/css">
- input[type=number]::-webkit-inner-spin-button,
+  input[type=number]::-webkit-inner-spin-button,
     input[type=number]::-webkit-outer-spin-button {
         -webkit-appearance: none;
         -moz-appearance: none;
@@ -86,9 +86,9 @@
                 <?php echo form_error('ins_type'); ?>
               </div>
             </div>
-			
-			<span class="text-danger eligable_text" style="display: none;">
-                <b> *** As Govt. need not to pay fess ***</b>
+
+            <span class="text-danger eligable_text" style="display: none;">
+              <b> *** As Govt. need not to pay fess ***</b>
             </span>
           </div>
         </div>
@@ -223,7 +223,7 @@
               </div>
               <div class="col-md-3">
                 <label>Year of experience * </label>
-                <input type="number" name="year_of_exp" value="<?php echo $formData['year_of_exp'];?>" placeholder="year of experience" class="form-control">
+                <input type="number" name="year_of_exp" value="<?php echo $formData['year_of_exp'];?>" placeholder="yer of experience" class="form-control">
                 <?php echo form_error('year_of_exp'); ?>
               </div>
               <div class="col-md-3">

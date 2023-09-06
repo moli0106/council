@@ -73,12 +73,13 @@
       }?>                
 				</td>
 				<td colspan="2">
-				  <?php if($link_part == "affiliation/view_all_details/"){ ?>
-					<a href="<?php  echo base_url('admin/polytechnic_affiliation/'.$link_part . md5($val['basic_affiliation_id_pk'])); ?>" class="btn btn-success btn-xs btn-block">View Details
-				  <?php }else{?>
-					<a href="<?php  echo base_url('admin/polytechnic_affiliation/'.$link_part . md5($val['basic_affiliation_id_pk'])); ?>" class="btn btn-warning btn-xs btn-block">Edit
-				  <?php }?>
-				  <?php if($val['institute_category_id_fk'] == 4){?>
+          <?php if($link_part == "affiliation/view_all_details/"){ ?>
+            <a href="<?php  echo base_url('admin/polytechnic_affiliation/'.$link_part . md5($val['basic_affiliation_id_pk'])); ?>" class="btn btn-success btn-xs btn-block">View Details
+          <?php }else{?>
+            <a href="<?php  echo base_url('admin/polytechnic_affiliation/'.$link_part . md5($val['basic_affiliation_id_pk'])); ?>" class="btn btn-warning btn-xs btn-block">Edit
+          <?php }?>
+
+          <?php if($val['institute_category_id_fk'] == 4){?>
 						<a href="<?php  echo base_url('admin/polytechnic_affiliation/affiliation/view_transaction/'. md5($val['basic_affiliation_id_pk'])); ?>" class="btn btn-warning btn-xs btn-block">Check Transaction Status
 				  <?php }?>
 				</td>
@@ -166,4 +167,4 @@
 <?php //}?>
   
 </div> 
-<?php $this->load->view($this->config->item('theme_uri') . 'layout/footer_view'); ?> 
+<?php $this->load->view($this->config->item('theme_uri') . 'layout/footer_view'); ?>

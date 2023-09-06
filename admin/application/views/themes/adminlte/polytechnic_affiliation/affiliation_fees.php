@@ -499,7 +499,7 @@
                 <td><input class="form-control" required onkeypress="return isNumberValid(event)" placeholder="Fees JEXPO Sem-6" name="j_sem[]"></td>
                 <td><input class="form-control" required onkeypress="return isNumberValid(event)" placeholder="Fees VOCLET Sem-6" name="v_sem[]"></td>
                </tr>
-                <?php }elseif($affiliation_data['affiliation_type_id_fk']==4) {?>
+                <?php }elseif($affiliation_data['affiliation_type_id_fk']==3) {?>
 
                 <tr>
                 <td>PART-I <input type="hidden" required value="PART_I" name="semester[]"></td>
@@ -512,7 +512,7 @@
                 <td><input class="form-control" required onkeypress="return isNumberValid(event)" placeholder="Fees Management Part-2" name="part_2[]"></td>
                </tr>
 
-              <?php }elseif($affiliation_data['affiliation_type_id_fk']==3) { ?>
+              <?php }elseif($affiliation_data['affiliation_type_id_fk']==2) { ?>
                 <tr>
                 <td>DVOC <input type="hidden" required value="DVOC" name="semester[]"></td>
                 <td><input class="form-control" required onkeypress="return isNumberValid(event)" placeholder="Fees Semester–1" name="dvoc_s1[]"></td>
@@ -522,7 +522,7 @@
                 <td><input class="form-control" required onkeypress="return isNumberValid(event)" placeholder="Fees Semester–5" name="dvoc_s5[]"></td>
                 <td><input class="form-control" required onkeypress="return isNumberValid(event)" placeholder="Fees Semester–6" name="dvoc_s6[]"></td>
                </tr>
-               <?php }elseif($affiliation_data['affiliation_type_id_fk']==2) { ?> 
+               <?php }elseif($affiliation_data['affiliation_type_id_fk']==4) { ?> 
 
                <tr>
                 <td>HMCT <input type="hidden" required value="HMCT" name="semester[]"></td>

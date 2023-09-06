@@ -155,13 +155,17 @@ class Choice_filling_model extends CI_Model
     }
 
 
-    public function getAllchoiceData($arr){
+    public function getAllchoiceData($arr,$order_by){
         $this->db->select('*');
         $this->db->from('council_institute_course_student_transfer');
         $this->db->where('percentage !=', 0);
         $this->db->where($arr);
-        $this->db->where('final_allotement !=', 1);
-        $this->db->order_by('firstsem_madhyamik_weightage_marks',desc);
+        $this->db->where('final_allotement', null);
+        $this->db->order_by('priority','Aesc');
+       
+        
+        $this->db->order_by($order_by,'desc');
+        
 
         $query = $this->db->get()->result_array();
         //echo $this->db->last_query();die;
@@ -193,7 +197,43 @@ class Choice_filling_model extends CI_Model
 
     public function get_available_intake($ins_id,$discipline_id){
 
+        $query = $this->db->query('select institute_id_fk,discipline_id_fk,available_intake,available_intake-(
+            select count(DISTINCT aa.institute_student_details_id_fk) 
+            from council_institute_course_student_transfer aa where aa.institute_id = bb.institute_id_fk and aa.discipline_id_fk   = bb.discipline_id_fk and aa.final_allotement=1) 
+            as available_seat from council_institute_intake_for_transfer bb where bb.institute_id_fk = '.$ins_id.' and bb.discipline_id_fk='.$discipline_id.'')->result_array();;
+        
+        if(!empty($query)){
+            return $query[0];
+        }else{
+            return array();
+        }
     }
+
+    public function upd_data($table,$std_id,$transfer_id_pk,$upd_arr){
+       // echo "<pre>";print_r($condition);die;
+        $this->db->where('transfer_id_pk',$transfer_id_pk);
+        $this->db->where('institute_student_details_id_fk',$std_id);
+        $this->db->update($table,$upd_arr);
+        //$this->db->last_query();exit;
+
+        return $this->db->affected_rows();
+
+
+    }
+
+    public function upd_data1($table,$std_id,$transfer_id_pk,$upd_arr){
+        // echo "<pre>";print_r($condition);die;
+         $this->db->where('transfer_id_pk!=',$transfer_id_pk);
+         $this->db->where('institute_student_details_id_fk',$std_id);
+         $this->db->update($table,$upd_arr);
+         //$this->db->last_query();exit;
+ 
+         return $this->db->affected_rows();
+ 
+ 
+     }
+
+
 
 
 }

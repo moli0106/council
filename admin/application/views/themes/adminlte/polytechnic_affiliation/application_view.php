@@ -97,7 +97,7 @@
                   <tr class="bg-primary">
                     <th>Activity / Status</th>
                     <th>Status Description</th>
-                    <!--th>Date</th-->
+                    <!-- <th>Date</th> -->
                     <th>Downloads</th>
                   </tr>
                 </thead>
@@ -105,15 +105,15 @@
                   <tr>
                     <td>Form Submission Status</td>
                     <td>Form Submitted Successfully</td>
-                    <!--td>2023-07-04 12:52:41</td-->
+                    <!-- <td>2023-07-04 12:52:41</td> -->
                     <td>
                       <a href="<?php echo base_url('admin/polytechnic_affiliation/affiliation/download_form/' .md5($affiliation_data['basic_affiliation_id_pk'])); ?>" class="btn btn-success btn-sm"><i class="fa fa-download"></i> Download Application Form</a>
                       &nbsp;<a href="<?php echo base_url('admin/polytechnic_affiliation/affiliation/download_uploaded_pdf/1/' .md5($affiliation_data['basic_affiliation_id_pk'])); ?>" target="_blank" class="btn btn-warning btn-sm"><i class="fa fa-download"></i> AICTE Approval File</a>
                       &nbsp;<a href="<?php echo base_url('admin/polytechnic_affiliation/affiliation/download_uploaded_pdf/2/' .md5($affiliation_data['basic_affiliation_id_pk'])); ?>" target="_blank" class="btn btn-info btn-sm"><i class="fa fa-download"></i> WBSCT&VE&SD Approval File</a>
-					  
-					  <?php if($affiliation_data['land_doc_file'] != null || $affiliation_data['land_doc_file'] != ''){?>
-						&nbsp;<a href="<?php echo base_url('admin/polytechnic_affiliation/affiliation/download_uploaded_pdf/3/' .md5($affiliation_data['basic_affiliation_id_pk'])); ?>" target="_blank" class="btn btn-info btn-sm"><i class="fa fa-download"></i> Land Doc File</a>
-					  <?php }?>
+                    
+                      <?php if($affiliation_data['land_doc_file'] != null || $affiliation_data['land_doc_file'] != ''){?>
+                        &nbsp;<a href="<?php echo base_url('admin/polytechnic_affiliation/affiliation/download_uploaded_pdf/3/' .md5($affiliation_data['basic_affiliation_id_pk'])); ?>" target="_blank" class="btn btn-info btn-sm"><i class="fa fa-download"></i> Land Doc File</a>
+                      <?php }?>
                     </td>
                   </tr>
                   <!-- <tr>

@@ -73,24 +73,24 @@
              <?php } ?>
             </div>
           </div>
-			<?php if($affiliation_data['institute_category_id_fk'] == 4) {?>
-			  <div class="row" style="margin-top:10px">
-				<div class="col-md-4">
-				  <label>Upload last (Affiliation Letter / NOC) from WBSCT&VE&SD  *</label><br>
-				  <font color="red"><strong>Maximum size : 512 KB (.pdf Only)</strong></font>
-				</div>
-				<div class="col-md-4">
-				  <input type="file" id="file2"  placeholder="Enter Regular Faculties" class="form-control"  accept="application/pdf">
-				  <input type="hidden" id="textArea2" name="file2">
-				</div>
-				<div class="col-md-4"> 
-				  <?php if($affiliation_data['wbsct_affiliation_file'] != ''){ ?>
-				 <a href='<?php echo base_url('admin/polytechnic_affiliation/affiliation/download_uploaded_pdf/2/' .md5($affiliation_data['basic_affiliation_id_pk'])); ?>' target="_blank" class="btn btn-info btn-sm"><i class='fa fa-download'></i>Download</a>
-				 <?php } ?>
-				</div>
-			  </div>
-		  
-		  
+          <?php if($affiliation_data['institute_category_id_fk'] == 4) {?>
+            <div class="row" style="margin-top:10px">
+              <div class="col-md-4">
+                <label>Upload last (Affiliation Letter / NOC) from WBSCT&VE&SD  *</label><br>
+                <font color="red"><strong>Maximum size : 512 KB (.pdf Only)</strong></font>
+              </div>
+              <div class="col-md-4">
+                <input type="file" id="file2"  placeholder="Enter Regular Faculties" class="form-control"  accept="application/pdf">
+                <input type="hidden" id="textArea2" name="file2">
+              </div>
+              <div class="col-md-4"> 
+                <?php if($affiliation_data['wbsct_affiliation_file'] != ''){ ?>
+              <a href='<?php echo base_url('admin/polytechnic_affiliation/affiliation/download_uploaded_pdf/2/' .md5($affiliation_data['basic_affiliation_id_pk'])); ?>' target="_blank" class="btn btn-info btn-sm"><i class='fa fa-download'></i>Download</a>
+              <?php } ?>
+              </div>
+            </div>
+
+          
             <div class="row" style="margin-top:10px">
               <div class="col-md-4">
                 <label>Area of Campus (in acres)  *</label><br>

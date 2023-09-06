@@ -7,7 +7,7 @@ class Poly_affiliation_model extends CI_Model
 		$this->db->select('*');
 		$this->db->from('council_state_master');
 		$this->db->where('active_status',1);
-		$this->db->where('state_id_pk',19);
+        $this->db->where('state_id_pk',19);
 		$query = $this->db->get()->result_array();
 
 		if (!empty($query)) {
@@ -77,7 +77,6 @@ class Poly_affiliation_model extends CI_Model
         return $this->db->insert_id();
         //echo $this->db->last_query();exit;
 
-
     }
 
     public function getAffiliationTypeByID($affi_id){
@@ -131,8 +130,8 @@ class Poly_affiliation_model extends CI_Model
             return array();
         }
     }
-	
-	public function gaetINSAffiliationDetailsById($id_hash){
+
+    public function gaetINSAffiliationDetailsById($id_hash){
 
         $this->db->select('afiiliation.*,affiliation_type.affiliation_type,category.category_name,state.state_name,district.district_name,subdiv.subdiv_name');
         $this->db->from('council_polytechnic_institute_basic_affiliation_details as afiiliation');
@@ -155,7 +154,6 @@ class Poly_affiliation_model extends CI_Model
         $this->db->select('count(teacher_id_pk)');
         $this->db->from('council_polytechnic_institute_teacher_details');
         $this->db->where('basic_affiliation_id_fk',$basic_id);
-		$this->db->where('active_status',1);
         $query = $this->db->get()->result_array();
         if(!empty($query)){
             return $query[0];
@@ -212,8 +210,6 @@ class Poly_affiliation_model extends CI_Model
             return array();
         }
     }
-	
-	
     public function getBranchName($affiliation_id){
    
         $this->db->select('*');
@@ -231,10 +227,11 @@ class Poly_affiliation_model extends CI_Model
    
         $this->db->select('teacher.*,discipline.discipline_name');
         $this->db->from('council_polytechnic_institute_teacher_details as teacher');
-        $this->db->join('council_qbm_discipline_master as discipline', 'discipline.discipline_id_pk = teacher.discipline_id_fk');
+        $this->db->join('council_qbm_discipline_master as discipline', 'discipline.discipline_id_pk = teacher.discipline_id_fk','Left');
         $this->db->where('teacher.active_status',1);
         $this->db->where("MD5(CAST(teacher.basic_affiliation_id_fk as character varying)) =", $id_hash);
         $query = $this->db->get()->result_array();
+        //echo $this->db->last_query();die;
         if(!empty($query)){
             return $query;
         }else{
@@ -245,10 +242,11 @@ class Poly_affiliation_model extends CI_Model
    
         $this->db->select('intake.*,discipline.discipline_name');
         $this->db->from('council_polytechnic_institute_intake_details as intake');
-        $this->db->join('council_qbm_discipline_master as discipline', 'discipline.discipline_id_pk = intake.discipline_id_fk');
+        $this->db->join('council_qbm_discipline_master as discipline', 'discipline.discipline_id_pk = intake.discipline_id_fk','left');
         $this->db->where('intake.active_status',1);
         $this->db->where("MD5(CAST(intake.basic_affiliation_id_fk as character varying)) =", $id_hash);
         $query = $this->db->get()->result_array();
+        //echo $this->db->last_query();die;
         if(!empty($query)){
             return $query;
         }else{
@@ -284,7 +282,7 @@ class Poly_affiliation_model extends CI_Model
         $this->db->from($table);
         $this->db->join('council_qbm_discipline_master as c2','c1.discipline_id_fk=c2.discipline_id_pk','INNER JOIN');
         $this->db->where($arr);
-		//$this->db->where('active_status',1);
+        //$this->db->where('c1.active_status',1);
         $query = $this->db->get()->result_array();
         if(!empty($query)){
             return $query;
@@ -301,13 +299,6 @@ class Poly_affiliation_model extends CI_Model
        $this->db->update($table, array('active_status' => 0));
 
        return $this->db->affected_rows();
-    }
-	
-	public function delete_details($table,$arr){
-        //print_r($arr);die;
-        $this->db->where($arr);
-       return $this->db->delete($table);
-       
     }
 
     public function mandory_master(){
@@ -349,7 +340,7 @@ class Poly_affiliation_model extends CI_Model
     }
 
     public function check_validation_new($id){
-		
+        
     return $this->db->query("SELECT COUNT
         ( DISTINCT c1.basic_affiliation_id_fk ) AS room_intake,
         COUNT ( DISTINCT c2.basic_affiliation_id_fk ) AS lab_intake,
@@ -366,8 +357,16 @@ class Poly_affiliation_model extends CI_Model
     public function insert_data_batch($table,$data_array){
 
         $query = $this->db->insert_batch($table,$data_array);
+        //echo $this->db->last_query();die;
         return $query;  
 
+    }
+
+    public function delete_details($table,$arr){
+        //print_r($arr);die;
+        $this->db->where($arr);
+       return $this->db->delete($table);
+       
     }
 
     public function getAffiliationList($id){
@@ -382,14 +381,14 @@ class Poly_affiliation_model extends CI_Model
         basic_details.intake_submited_status,
         basic_details.affiliation_type_id_fk,
         basic_details.application_number,
-		basic_details.final_submit_status,
-		basic_details.institute_category_id_fk,
+        basic_details.final_submit_status,
+        basic_details.institute_category_id_fk,
         type.affiliation_type
         ');
         $this->db->from('council_polytechnic_institute_basic_affiliation_details as basic_details');
         $this->db->join('council_polytechnic_affiliation_type_master as type', 'basic_details.affiliation_type_id_fk = type.affiliation_type_id_pk');
         $this->db->where('basic_details.active_status',1);
-		$this->db->where('basic_details.vtc_id_fk',$id);
+        $this->db->where('basic_details.vtc_id_fk',$id);
         $query = $this->db->get()->result_array();
         if(!empty($query)){
             return $query;
@@ -397,8 +396,8 @@ class Poly_affiliation_model extends CI_Model
             return array();
         }
     }
-	
-	public function getPaymentStatus_old($id_hash){
+
+    public function getPaymentStatus_old($id_hash){
 
         $this->db->select('payment.response_status,payment.transaction_id');
         $this->db->from('council_polytechnic_affiliation_payment as payment');
@@ -410,7 +409,8 @@ class Poly_affiliation_model extends CI_Model
             return array();
         }
     }
-	public function getPaymentStatus($id_hash){
+
+    public function getPaymentStatus($id_hash){
 
         $this->db->select('payment.response_status,payment.transaction_id,payment.posting_amount,payment.sending_time');
         $this->db->from('council_polytechnic_affiliation_payment as payment');
@@ -423,8 +423,8 @@ class Poly_affiliation_model extends CI_Model
             return array();
         }
     }
-	
-	public function fetch_poly_fees_data($id,$affiliation_type){
+
+    public function fetch_poly_fees_data($id,$affiliation_type){
         $this->db->select('*');
         $this->db->from("council_polytechnic_affiliation_fees_structure as c1");
         $this->db->where('c1.basic_affiliation_id_fk',$id);
@@ -436,8 +436,8 @@ class Poly_affiliation_model extends CI_Model
             return array();
         }
     }
-	
-	public function get_transaction_history($institute_id_fk,$id_hash){
+
+    public function get_transaction_history($institute_id_fk,$id_hash){
 		
 		$this->db->select('transaction_id,posting_amount,sending_time');
         $this->db->from("council_polytechnic_affiliation_payment");

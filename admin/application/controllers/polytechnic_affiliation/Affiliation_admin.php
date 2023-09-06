@@ -335,7 +335,7 @@ class Affiliation_admin extends NIC_Controller
         // echo "<pre>";
         // print_r($data);
         $this->m_pdf->pdf->AddPage('P');
-        $this->m_pdf->pdf->SetWatermarkImage( $_SERVER['DOCUMENT_ROOT'] . '/' .'admin/themes/adminlte/assets/image/certificate/logo.png', 0.1,[100, 100]); 
+        $this->m_pdf->pdf->SetWatermarkImage('http://localhost/council_live/admin/themes/adminlte/assets/image/certificate/logo.png', 0.1,[100, 100]); 
         $this->m_pdf->pdf->showWatermarkImage = true;
         //$this->load->view($this->config->item('theme') . 'polytechnic_affiliation/affiliation_doc_upload'); 
         $html   = $this->load->view($this->config->item('theme') . 'polytechnic_affiliation/application_form',$data,true);

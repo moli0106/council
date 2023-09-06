@@ -17,13 +17,14 @@ class Affiliation extends NIC_Controller
         
     }
 
-    public function index(){
+    public function index(){ 
         
         $data['ins_details_id'] = $this->session->userdata('stake_details_id_fk');
-		
+       
         $data['ins_details'] = $this->poly_affiliation_model->getInstituteDetailsById($data['ins_details_id']);
+        //echo "<pre>";print_r($data['ins_details']);die;
         $data['affiliation_year'] = '2023-24';
-		
+        
         $data['affiliation_type'] = $this->poly_affiliation_model->getAffiliationType();
         $data['affiliation_data'] = $this->poly_affiliation_model->getAffiliationList($data['ins_details_id']);
         
@@ -70,6 +71,8 @@ class Affiliation extends NIC_Controller
                         'institute_name' => $data['ins_details']['institute_name'],
 						'new_or_renewal' => $this->input->post('new_renewal')
                     );
+
+                    echo "<pre>";print_r($data_array);die;
 
                     // ! Starting Transaction
                     $this->db->trans_start(); # Starting Transaction
@@ -125,8 +128,6 @@ class Affiliation extends NIC_Controller
         $data['id_hash'] = $id_hash;
 		$data['stateList']  = $this->poly_affiliation_model->getAllState();
         $data['affiliation_year'] = '2023-24';
-		
-		
         $data['affiliation_data'] = $this->poly_affiliation_model->gaetINSAffiliationDetailsById($id_hash);
 		//echo "<pre>";print_r($data['affiliation_data']);exit;
         $affiliation_id = $data['affiliation_data']['basic_affiliation_id_pk'];
@@ -328,11 +329,10 @@ class Affiliation extends NIC_Controller
                 $this->session->set_flashdata('status', 'danger');
                 $this->session->set_flashdata('alert_msg', 'Validation error.');
             }else{
-				
-				$tmp_date = explode('-', $this->input->post('join_date'));
+                $tmp_date = explode('-', $this->input->post('join_date'));
                 $date = date_create($tmp_date[2] . '-' . $tmp_date[1] . '-' . $tmp_date[0]);
                 $date = date_format($date, "Y-m-d");
-				
+
                 $upd_data = array(
                     'mobile_no_1' => $this->input->post('mobile_1'),
                     'mobile_no_2'=> ($this->input->post('mobile_2') == '') ? NULL : $this->input->post('mobile_2'),
@@ -563,8 +563,8 @@ class Affiliation extends NIC_Controller
                     'rules' => 'trim|required|exact_length[10]'
                 )
             );
-			
-			if($this->input->post('engagement_type') == 'Other'){
+
+            if($this->input->post('engagement_type') == 'Other'){
                 $config[] = array(
                     'field' => 'other_faculty',
                     'label' => 'Other Faculty Type',
@@ -576,7 +576,7 @@ class Affiliation extends NIC_Controller
             if ($this->form_validation->run() == FALSE) {
                 //$this->load->view($this->config->item('theme') . 'polytechnic_affiliation/affiliation_view', $data);
                 $this->session->set_flashdata('status', 'danger');
-                $this->session->set_flashdata('alert_msg', 'Validation errorsssss.');
+                $this->session->set_flashdata('alert_msg', 'Validation error.');
             }else{
 
                 $tmp_date = explode('-', $this->input->post('join_date'));
@@ -602,7 +602,7 @@ class Affiliation extends NIC_Controller
                     'entry_time'=> 'now()',
                     'entry_ip' => $this->input->ip_address(),
 					'active_status'     =>1,
-					'other_faculty' => ($this->input->post('other_faculty') == '') ? '' : $this->input->post('other_faculty')
+                    'other_faculty' => ($this->input->post('other_faculty') == '') ? '' : $this->input->post('other_faculty')
                 );
 				//echo "<pre>";print_r($data_array);die;
                
@@ -748,9 +748,9 @@ class Affiliation extends NIC_Controller
         $data['mandory_data'] = $this->poly_affiliation_model->mandory_master();
 
         $data['fetch_mandory_data'] = $this->poly_affiliation_model->fetch_mandory_data($data['affiliation_data']['basic_affiliation_id_pk']);
-		
-		$data['fetch_fees_data'] = $this->poly_affiliation_model->fetch_poly_fees_data($data['affiliation_data']['basic_affiliation_id_pk'],$data['affiliation_data']['affiliation_type_id_fk']);
-		
+
+        $data['fetch_fees_data'] = $this->poly_affiliation_model->fetch_poly_fees_data($data['affiliation_data']['basic_affiliation_id_pk'],$data['affiliation_data']['affiliation_type_id_fk']);
+        
 		$data['payment_status'] = $this->poly_affiliation_model->getPaymentStatus($id_hash);
         // Payment 
         if($data['affiliation_data']['institute_category_id_fk'] == 4){
@@ -996,10 +996,10 @@ class Affiliation extends NIC_Controller
             $this->form_validation->set_error_delimiters('<div class="text-white">', '</div>');
             $this->form_validation->set_rules('file1', 'AICTE Approval Letter', 'trim|callback_file_validation['.$this->input->post('file1').'|file1|1024]');
             
-			
-			//Added by Moli on 26-07-2023
+
+            //Added by Moli on 26-07-2023
 			if($data['affiliation_data']['institute_category_id_fk'] == 4){
-				$this->form_validation->set_rules('file2', 'Affiliation Letter', 'trim|callback_file_validation['.$this->input->post('file2').'|file2|512]');
+                $this->form_validation->set_rules('file2', 'Affiliation Letter', 'trim|callback_file_validation['.$this->input->post('file2').'|file2|512]');
                 $this->form_validation->set_rules('file3', 'Land Document', 'trim|callback_file_validation['.$this->input->post('file3').'|file3|200]');
                 $this->form_validation->set_rules('campus_area' , 'Area of Campus', 'trim|required');
             }
@@ -1007,15 +1007,15 @@ class Affiliation extends NIC_Controller
             if ($this->form_validation->run() != FALSE) {
                 $decode_aicte_data=hex2bin($this->input->post('file1'));
                 $aicte_file=str_replace("data:application/pdf;base64,","",$decode_aicte_data); //For Technical Education (AICTE)
-				
+
                 if($this->input->post('file2') !=''){
                     $decode_affiliation_data=hex2bin($this->input->post('file2'));
                     $affiliation_file=str_replace("data:application/pdf;base64,","",$decode_affiliation_data); //For Affiliation Letter
                 }else{
                     $affiliation_file= NULL; 
                 }
-				
-				//Added by on 26-07-2023
+
+                //Added by on 26-07-2023
 				if($this->input->post('file3') !=''){
 
                     $decode_land_doc_data=hex2bin($this->input->post('file3'));
@@ -1023,15 +1023,13 @@ class Affiliation extends NIC_Controller
                 }else{
                     $land_file= NULL; 
                 }
-				
                 $arr=[
                     'aicte_approval_file'=>$aicte_file,
                     'wbsct_affiliation_file'=>$affiliation_file,
-					'doc_uploaded_status' => 1,
-					
-					'land_doc_file' => $land_file,
+                    'doc_uploaded_status' => 1,
+
+                    'land_doc_file' => $land_file,
                     'campus_area' => ($this->input->post('campus_area') == '') ? NULL : $this->input->post('campus_area')
-					
                     ]; 
 
                     //print_r($arr);exit;
@@ -1800,8 +1798,8 @@ class Affiliation extends NIC_Controller
             redirect('admin/syllabus/upload_syllabus');
         }
     }
-	
-	//add by moli on 21-07-2023
+
+    //add by moli on 21-07-2023
     public function view_all_details($id_hash = NULL){
 
         $data['ins_details_id'] = $this->session->userdata('stake_details_id_fk');
@@ -1811,8 +1809,8 @@ class Affiliation extends NIC_Controller
         $data['affiliation_data'] = $this->poly_affiliation_model->gaetINSAffiliationDetailsById($id_hash);
         $this->load->view($this->config->item('theme') . 'polytechnic_affiliation/application_view', $data);
     }
- 
-	public function download_form($id_hash=NULL){
+
+    public function download_form($id_hash=NULL){
         $this->load->library('m_pdf');
         $data['ins_details_id'] = $this->session->userdata('stake_details_id_fk');
         $data['ins_details'] = $this->poly_affiliation_model->getInstituteDetailsById($data['ins_details_id']);
@@ -1909,9 +1907,10 @@ class Affiliation extends NIC_Controller
             $data['payment'] = array();
         }
         // echo "<pre>";
-        // print_r($data);
+        // print_r($data);die;
+        
         $this->m_pdf->pdf->AddPage('P');
-        $this->m_pdf->pdf->SetWatermarkImage( $_SERVER['DOCUMENT_ROOT'] . '/' .'admin/themes/adminlte/assets/image/certificate/logo.png', 0.1,[100, 100]);
+        $this->m_pdf->pdf->SetWatermarkImage( $_SERVER['DOCUMENT_ROOT'] . '/' .'admin/themes/adminlte/assets/image/certificate/logo.png', 0.1,[100, 100]); 
         $this->m_pdf->pdf->showWatermarkImage = true;
         //$this->load->view($this->config->item('theme') . 'polytechnic_affiliation/affiliation_doc_upload'); 
         $html   = $this->load->view($this->config->item('theme') . 'polytechnic_affiliation/application_form',$data,true);
@@ -1919,8 +1918,8 @@ class Affiliation extends NIC_Controller
 
         $this->m_pdf->pdf->Output($pdfFilePath, 'I');
     }
-	
-	public function view_transaction($basic_id_hash){
+
+    public function view_transaction($basic_id_hash){
         $data['institute_id_fk'] =  $this->session->userdata('stake_details_id_fk');
         
         
@@ -1928,6 +1927,7 @@ class Affiliation extends NIC_Controller
         //print_r($data);exit;
         $this->load->view($this->config->item('theme') . 'polytechnic_affiliation/trans_view_list', $data);
     }
+ 
  
 
 }

@@ -108,20 +108,20 @@
                <select name="state" id="state" class="form-control" readonly disabled="true">
                 <option value="" hidden="true">--Select State--</option>
                 <option selected><?php echo $affiliation_data['state_name'];?></option>
-                <!-- <?php foreach ($stateList as $key => $value) { ?>
+<!--                 <?php foreach ($stateList as $key => $value) { ?>
                 <option value="<?php echo $value['state_id_pk']; ?>" <?php if($affiliation_data['state_id_fk'] ==$value['state_id_pk'] ){echo 'selected';} ?>>
                 <?php echo $value['state_name']; ?>
                 </option>
-                <?php } ?>
-                </select>  -->
+                <?php } ?> -->
+                </select> 
               <?php echo form_error('state'); ?>
             </div>
             <div class="col-md-6">
               <label>District * </label>
               <select name="district" id="district" class="form-control"  disabled="true">
-                 <option selected><?php echo $affiliation_data['district_name'];?></option>
+                <option selected><?php echo $affiliation_data['district_name'];?></option>
 
-                <!-- <?php if($this->input->method(TRUE) == "POST"){ ?>
+               <!--  <?php if($this->input->method(TRUE) == "POST"){ ?>
 
                 <?php foreach ($district as $value) {?>
                 <option value="<?php echo $value['district_id_pk']?>" <?php if($affiliation_data['district_id_fk'] ==$value['district_id_pk'] ){echo 'selected';} ?>>
@@ -129,8 +129,8 @@
                 <?php }?> 
                 <?php  }else{?>
                 <option value="" hidden="true">Select District</option>
-                <?php }  ?> -->
-                
+                <?php }  ?>
+                 -->
                 </select>
               <?php echo form_error('district'); ?>
             </div>
@@ -139,10 +139,9 @@
             <div class="col-md-6">
               <label>Sub Division * </label>
              <select name="subDivision" id="subDivision" class="form-control" readonly disabled="true">
+                <option selected><?php echo $affiliation_data['subdiv_name'];?></option>
 
-               <option selected><?php echo $affiliation_data['subdiv_name'];?></option>
-
-             <!--  <?php if($this->input->method(TRUE) == "POST"){ ?>
+              <!-- <?php if($this->input->method(TRUE) == "POST"){ ?>
 
                <?php foreach ($subDivision as $value) {?>
                 <option value="<?php echo $value['subdiv_id_pk']?>" <?php if($affiliation_data['sub_divission_id_fk'] ==$value['subdiv_id_pk'] ){echo 'selected';} ?>>
@@ -151,10 +150,10 @@
                 <?php } else{?>
                 <option value="" hidden="true">Select Sub Division</option>
                 <option value="" disabled="true">Select District first...</option>
-                <?php }?>
+                <?php }?> -->
                                                     
                 </select>
-                <?php echo form_error('subDivision'); ?> -->
+                <?php echo form_error('subDivision'); ?>
             </div>
             <div class="col-md-6">
               <label>PIN Code * </label>
@@ -427,9 +426,8 @@
       </div>
 
     <!-- End Mandatory Requirements Programme-->
-	
-	
-	<div class="shadow" style="margin-top:10px">
+
+    <div class="shadow" style="margin-top:10px">
         <div class="row">
             <div class="columns" style="margin-left: 10px;">
                 <center><font><b>Fees received per Individual Student</b></font></center>

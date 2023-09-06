@@ -1,6 +1,6 @@
 <div class="row" style="margin-left:5px;">
     <div class="col-md-2 btn btn-<?php if($active_class == 'basicDetails'){echo 'success';}else{echo 'warning';} ?> ckborder">
-        <a  style="color:#fff;!important" href="<?php  echo base_url('admin/polytechnic_affiliation/affiliation/basic_details/' . md5($affiliation_data['basic_affiliation_id_pk'])); ?>">
+        <a style="color:#fff;!important" href="<?php  echo base_url('admin/polytechnic_affiliation/affiliation/basic_details/' . md5($affiliation_data['basic_affiliation_id_pk'])); ?>">
             <i class="fa fa-university"></i> Institute Basic Details
         </a>
     </div>
